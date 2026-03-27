@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>InviteZoom – Reviews & Feedback</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --saffron:#FF6B00;--magenta:#D4006A;--teal:#00897B;--gold:#F5A623;
+  --ink:#1a0a00;--muted:#6b5c4e;--bg:#FFF8F0;--r:16px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;min-height:100vh}
+
+/* ── CONFETTI ─── */
+.confetti-rain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.cr{position:absolute;top:-20px;border-radius:2px;animation:fall linear infinite}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.cr:nth-child(1){left:5%;background:#FF6B00;animation-duration:3s;width:6px;height:10px}
+.cr:nth-child(2){left:15%;background:#D4006A;animation-duration:3.5s;animation-delay:.5s;width:9px;height:6px;border-radius:50%}
+.cr:nth-child(3){left:28%;background:#F5A623;animation-duration:2.8s;animation-delay:1s;width:7px;height:7px}
+.cr:nth-child(4){left:42%;background:#00897B;animation-duration:3.2s;animation-delay:.3s;width:5px;height:11px}
+.cr:nth-child(5){left:58%;background:#7B1FA2;animation-duration:2.6s;animation-delay:1.3s;border-radius:50%;width:8px;height:8px}
+.cr:nth-child(6){left:72%;background:#FF6B00;animation-duration:3.4s;animation-delay:.7s;width:10px;height:5px}
+.cr:nth-child(7){left:85%;background:#D4006A;animation-duration:2.9s;animation-delay:1.7s;width:6px;height:9px}
+.cr:nth-child(8){left:92%;background:#F5A623;animation-duration:3.1s;animation-delay:.2s;border-radius:50%;width:7px;height:7px}
+
+/* ── RANGOLI BORDER ─── */
+.rangoli{height:5px;background:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--purple,#7B1FA2),var(--teal),var(--gold),var(--saffron));background-size:200% 100%;animation:rFlow 3s linear infinite}
+@keyframes rFlow{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+
+/* ── HEADER ─── */
+.hdr{background:#fff;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--teal)) 1;position:sticky;top:0;z-index:100;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 20px rgba(212,0,106,.1)}
+.logo{font-family:'Fredoka One',cursive;font-size:1.4rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:flex;align-items:center;gap:5px}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:.78rem;font-weight:800;color:var(--saffron);text-decoration:none;background:#FFF3E0;padding:6px 12px;border-radius:18px;border:2px solid #FFD0B0;transition:all .15s}
+.back-btn:hover{background:var(--saffron);color:#fff;border-color:var(--saffron)}
+
+/* ── HERO ─── */
+.hero{background:linear-gradient(160deg,#FFF3E0,#FCE4EC,#F3E5F5,#E0F2F1);background-size:300% 300%;animation:hShift 8s ease infinite;text-align:center;padding:32px 20px 24px;position:relative;overflow:hidden}
+@keyframes hShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hero-float{position:absolute;font-size:1.4rem;animation:hFloat var(--d,4s) ease-in-out var(--del,0s) infinite}
+@keyframes hFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-14px) rotate(5deg)}}
+.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,5vw,2.6rem);color:var(--ink);line-height:1.15;margin-bottom:8px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:.9rem;max-width:380px;margin:0 auto}
+
+/* ── STATS ROW ─── */
+.stats{display:flex;justify-content:center;gap:0;flex-wrap:wrap;padding:20px 16px 0;position:relative;z-index:1}
+.stat-box{text-align:center;padding:0 20px}
+.stat-num{font-family:'Fredoka One',cursive;font-size:1.8rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-lbl{font-size:.72rem;font-weight:700;color:var(--muted)}
+.stat-sep{width:1px;background:linear-gradient(180deg,transparent,#FFD0B0,transparent);margin:8px 0}
+
+/* ── WISH CTA BANNER ─── */
+.wish-banner{
+  margin:20px 16px 0;border-radius:18px;overflow:hidden;
+  background:linear-gradient(135deg,#1a0a00,#3d0000);
+  padding:20px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;position:relative;z-index:1;
+  box-shadow:0 8px 32px rgba(204,0,0,.25);
+}
+.wish-banner::before{content:'🎂🎉🎊🎈';position:absolute;right:12px;top:6px;font-size:1.1rem;opacity:.15;letter-spacing:4px}
+.wish-txt h3{font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;margin-bottom:4px}
+.wish-txt p{font-size:.78rem;color:rgba(255,255,255,.65);line-height:1.4}
+.wish-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:linear-gradient(135deg,#ff0000,#cc0000);
+  color:#fff;font-size:.82rem;font-weight:900;
+  padding:10px 18px;border-radius:22px;text-decoration:none;
+  box-shadow:0 4px 16px rgba(255,0,0,.4);white-space:nowrap;flex-shrink:0;
+  animation:ytG 2s ease-in-out infinite;
+}
+@keyframes ytG{0%,100%{box-shadow:0 4px 16px rgba(255,0,0,.4)}50%{box-shadow:0 4px 24px rgba(255,0,0,.65)}}
+.wish-btn:hover{transform:translateY(-2px)}
+
+/* ── FORM SECTION ─── */
+.form-section{padding:20px 16px 0;position:relative;z-index:1}
+.section-hdr{font-family:'Fredoka One',cursive;font-size:1.1rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:14px}
+
+.form-card{background:#fff;border-radius:20px;padding:22px;box-shadow:0 4px 24px rgba(212,0,106,.1);border:2px solid #FFE8D0}
+
+/* star rating */
+.star-row{display:flex;align-items:center;gap:6px;margin-bottom:18px}
+.star-lbl{font-size:.75rem;font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.3px;margin-right:4px}
+.star{font-size:1.8rem;cursor:pointer;transition:transform .15s;color:#ddd;line-height:1}
+.star.lit{color:#F5A623}
+.star:hover{transform:scale(1.2)}
+
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fg label{font-size:.68rem;font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
+.fg input,.fg textarea,.fg select{
+  padding:10px 13px;border:2px solid #FFD0B0;border-radius:11px;
+  font-family:'Nunito',sans-serif;font-size:.9rem;color:var(--ink);
+  background:#FFF8F0;outline:none;transition:all .15s;
+}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--magenta);background:#fff;box-shadow:0 0 0 3px rgba(212,0,106,.1)}
+.fg textarea{resize:vertical;min-height:90px}
+
+/* char counter */
+.char-row{display:flex;justify-content:space-between;align-items:center}
+.char-count{font-size:.68rem;color:var(--muted);font-weight:600}
+.char-count.warn{color:var(--magenta)}
+
+/* error msg */
+.field-err{font-size:.7rem;color:#dc2626;font-weight:700;display:none;margin-top:2px}
+.field-err.show{display:block}
+
+/* bad word warning */
+.badword-warn{
+  background:#FEF2F2;border:2px solid #FECACA;border-radius:12px;
+  padding:12px 14px;margin-bottom:14px;display:none;
+  align-items:center;gap:10px;
+}
+.badword-warn.show{display:flex}
+.badword-warn .bw-icon{font-size:1.4rem;flex-shrink:0}
+.badword-warn p{font-size:.8rem;color:#991B1B;font-weight:700;line-height:1.4}
+
+/* submit btn */
+.sub-btn{
+  width:100%;padding:14px;border:none;border-radius:13px;
+  background:linear-gradient(135deg,var(--saffron),var(--magenta));
+  color:#fff;font-family:'Fredoka One',cursive;font-size:1.05rem;
+  cursor:pointer;box-shadow:0 8px 24px rgba(212,0,106,.3);
+  transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:4px;
+}
+.sub-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,0,106,.4)}
+.sub-btn:active{transform:scale(.98)}
+.sub-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+/* ── REVIEWS LIST ─── */
+.reviews-section{padding:20px 16px 50px;position:relative;z-index:1}
+.reviews-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.reviews-hdr h2{font-family:'Fredoka One',cursive;font-size:1.1rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sort-sel{padding:6px 12px;border:2px solid #FFD0B0;border-radius:18px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:700;color:var(--saffron);background:#FFF8F0;outline:none;cursor:pointer}
+
+/* review card */
+.review-card{
+  background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;
+  box-shadow:0 2px 12px rgba(212,0,106,.07);
+  border:2px solid #FFE8D0;
+  animation:cardIn .3s ease;position:relative;overflow:hidden;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.review-card::before{content:'◆';position:absolute;top:8px;right:12px;font-size:.5rem;color:rgba(255,107,0,.3)}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px}
+.rc-avatar{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.rc-meta{flex:1}
+.rc-name{font-size:.88rem;font-weight:900;color:var(--ink);margin-bottom:2px}
+.rc-date{font-size:.68rem;color:var(--muted)}
+.rc-stars{font-size:.9rem;letter-spacing:1px}
+.rc-template{display:inline-block;font-size:.65rem;font-weight:800;background:#FFF3E0;color:var(--saffron);padding:2px 8px;border-radius:8px;margin-top:4px}
+.rc-body{font-size:.85rem;color:#444;line-height:1.55;margin-top:8px}
+.rc-helpful{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:8px;border-top:1px dashed #FFD0B0}
+.helpful-btn{display:flex;align-items:center;gap:4px;font-size:.72rem;font-weight:700;color:var(--muted);background:none;border:1.5px solid #FFD0B0;border-radius:14px;padding:4px 10px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif}
+.helpful-btn:hover{border-color:var(--teal);color:var(--teal)}
+.helpful-btn.voted{border-color:var(--teal);color:var(--teal);background:#E0F2F1}
+.rc-verified{font-size:.65rem;font-weight:800;color:var(--teal);margin-left:auto;display:flex;align-items:center;gap:3px}
+
+/* empty state */
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-state .ei{font-size:3rem;margin-bottom:10px}
+.empty-state p{font-size:.88rem}
+
+/* success toast */
+.tst{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:linear-gradient(135deg,var(--saffron),var(--magenta));color:#fff;padding:12px 24px;border-radius:30px;font-size:.82rem;font-weight:800;z-index:500;transition:transform .3s;white-space:nowrap;box-shadow:0 8px 24px rgba(212,0,106,.35)}
+.tst.on{transform:translateX(-50%) translateY(0)}
+
+/* loader */
+.ldr{display:none;position:fixed;inset:0;background:rgba(26,10,0,.9);z-index:400;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.ldr.on{display:flex}
+.lspin{width:44px;height:44px;border:4px solid rgba(255,107,0,.2);border-top-color:var(--saffron);border-right-color:var(--magenta);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ldr p{color:#fff;font-weight:800;font-size:.9rem}
+
+/* footer */
+.foot{text-align:center;padding:20px 16px;color:var(--muted);font-size:.75rem;border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--teal)) 1;background:#fff}
+</style>
+</head>
+<body>
+
+<div class="confetti-rain" aria-hidden="true">
+  <div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div>
+  <div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div>
+</div>
+
+<div class="ldr" id="ldr"><div class="lspin"></div><p>Submitting...</p></div>
+<div class="tst" id="tst"></div>
+
+<div class="rangoli"></div>
+<header class="hdr">
+  <div class="logo">⭐ Reviews</div>
+  <a class="back-btn" href="invitezoom.html">← InviteZoom</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-float" style="top:10%;left:5%;--d:3.5s;--del:0s">🌟</span>
+  <span class="hero-float" style="top:12%;right:6%;--d:4s;--del:.5s">💫</span>
+  <span class="hero-float" style="bottom:12%;left:8%;--d:3s;--del:1s">✨</span>
+  <span class="hero-float" style="bottom:15%;right:7%;--d:4.5s;--del:.3s">🎊</span>
+  <h1>Customer <em>Reviews</em></h1>
+  <p>Real customers, genuine feedback. உங்கள் அனுபவம் சொல்லுங்க!</p>
+</section>
+
+<!-- STATS -->
+<div class="stats" id="statsRow">
+  <div class="stat-box"><div class="stat-num" id="avgRating">—</div><div class="stat-lbl">Average Rating</div></div>
+  <div class="stat-sep"></div>
+  <div class="stat-box"><div class="stat-num" id="totalReviews">0</div><div class="stat-lbl">Total Reviews</div></div>
+  <div class="stat-sep"></div>
+  <div class="stat-box"><div class="stat-num" id="fiveStars">0</div><div class="stat-lbl">5 Star Reviews</div></div>
+</div>
+
+<!-- WISH CTA BANNER -->
+<div class="wish-banner">
+  <div class="wish-txt">
+    <h3>🎂 Birthday Wishes வேணுமா?</h3>
+    <p>Songs, messages, special videos — எல்லாம் free-யா பெறுங்க!</p>
+  </div>
+  <a class="wish-btn" href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener">
+    <svg width="14" height="11" viewBox="0 0 16 12" fill="white"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
+    Bday Zone 🔔
+  </a>
+</div>
+
+<!-- WRITE REVIEW FORM -->
+<div class="form-section">
+  <div class="section-hdr">✍️ Write Your Review</div>
+  <div class="form-card">
+
+    <!-- BAD WORD WARNING -->
+    <div class="badword-warn" id="badWordWarn">
+      <span class="bw-icon">🚫</span>
+      <p>Inappropriate words detected! Please use respectful language. நல்ல வார்த்தைகளில் மட்டும் கருத்து சொல்லுங்க.</p>
+    </div>
+
+    <!-- STAR RATING -->
+    <div class="star-row">
+      <span class="star-lbl">Rating *</span>
+      <span class="star" data-val="1" onclick="setRating(1)">★</span>
+      <span class="star" data-val="2" onclick="setRating(2)">★</span>
+      <span class="star" data-val="3" onclick="setRating(3)">★</span>
+      <span class="star" data-val="4" onclick="setRating(4)">★</span>
+      <span class="star" data-val="5" onclick="setRating(5)">★</span>
+      <span id="ratingTxt" style="font-size:.75rem;font-weight:700;color:var(--muted);margin-left:6px"></span>
+    </div>
+    <div class="field-err show" id="ratingErr" style="margin-bottom:10px;display:none">⚠️ Rating தேர்வு செய்யுங்க!</div>
+
+    <div class="fg">
+      <label>👤 Your Name *</label>
+      <input type="text" id="rName" placeholder="e.g. Priya, Murugan..." maxlength="40">
+      <span class="field-err" id="nameErr">⚠️ பெயர் கொடுங்க!</span>
+    </div>
+
+    <div class="fg">
+      <label>📍 City</label>
+      <input type="text" id="rCity" placeholder="e.g. Tiruppur, Chennai..." maxlength="30">
+    </div>
+
+    <div class="fg">
+      <label>🎨 Template Used</label>
+      <select id="rTemplate">
+        <option value="">— Select template —</option>
+        <option>Princess Magic</option><option>Superhero</option><option>Dino Party</option>
+        <option>Unicorn Dream</option><option>Space Adventure</option><option>Safari Wild</option>
+        <option>Rainbow Party</option><option>Under the Sea</option><option>Music Fest</option>
+        <option>Gaming Zone</option><option>Neon Glow</option><option>Sports Champ</option>
+        <option>Black Elegance</option><option>Tropical Fiesta</option><option>Floral Garden</option>
+        <option>Golden 50th</option><option>Sweet 16</option><option>Diamond 60th</option>
+        <option>Winter Wonder</option><option>Spring Garden</option><option>Summer Beach</option>
+        <option>Masquerade Ball</option><option>Confetti Party</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <div class="char-row">
+        <label>💬 Your Review * <span style="font-weight:400;color:var(--muted)">(min 20 chars)</span></label>
+        <span class="char-count" id="charCount">0/300</span>
+      </div>
+      <textarea id="rText" placeholder="உங்கள் அனுபவம் சொல்லுங்க... Invitation எப்படி இருந்தது, delivery fast-ஆ இருந்துச்சா, friends எப்படி react பண்ணாங்க..." maxlength="300" oninput="onTextInput()"></textarea>
+      <span class="field-err" id="textErr">⚠️ குறைந்தது 20 எழுத்துக்கள் கொடுங்க!</span>
+    </div>
+
+    <button class="sub-btn" id="subBtn" onclick="submitReview()">
+      🌟 Submit My Review
+    </button>
+  </div>
+</div>
+
+<!-- REVIEWS LIST -->
+<div class="reviews-section">
+  <div class="reviews-hdr">
+    <h2 id="reviewsTitle">💬 All Reviews</h2>
+    <select class="sort-sel" id="sortSel" onchange="renderReviews()">
+      <option value="newest">Newest First</option>
+      <option value="highest">Highest Rating</option>
+      <option value="helpful">Most Helpful</option>
+    </select>
+  </div>
+  <div id="reviewsList"></div>
+</div>
+
+<div class="rangoli"></div>
+<footer class="foot">
+  <a href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;color:#cc0000;font-weight:800;font-size:.76rem;text-decoration:none;margin-bottom:5px">
+    <svg width="12" height="9" viewBox="0 0 16 12" fill="#cc0000"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
+    Bday Zone YouTube
+  </a>
+  <p style="font-size:.72rem">© 2025 DJ Groups. All Rights Reserved.</p>
+</footer>
+
+<script>
+// ── BAD WORDS LIST ────────────────────────────────
+// English bad words
+const BAD_EN = ['fuck','shit','bastard','asshole','bitch','damn','crap','ass','idiot','stupid','dumb','moron','loser','ugly','trash','hate','suck','bloody','hell','whore','slut','cunt','dick','cock','pussy','nigger','retard','faggot','gay','lesbian','rape','kill','die','dead','murder'];
+
+// Tamil bad words (romanized + some unicode common ones)
+const BAD_TA = ['otha','punda','thevdiya','koothi','sunni','paiyan','loosu','baadu','naaye','myre','myru','thayoli','kundi','oombu','oombal','patti','kazhutha','sootha','lavada','lavde','gadha','sala','saala','saale','harami','madarchod','behenchod','bhosdike','chutiya','randi','gaandu','kutte','kamine'];
+
+// Unicode Tamil bad words
+const BAD_TA_UNI = ['ஓத்தா','புண்ட','தேவடியா','கூதி','சுன்னி','லூசு','நாயே','மைரு','தாயோலி','கும்பி','ஊம்பு','பாட்டி','கழுதை','சூத'];
+
+function containsBadWord(text) {
+  const lower = text.toLowerCase().replace(/[^a-z0-9\u0B80-\u0BFF\s]/g,'');
+  for (const w of BAD_EN) {
+    if (lower.includes(w)) return true;
+  }
+  for (const w of BAD_TA) {
+    if (lower.includes(w)) return true;
+  }
+  for (const w of BAD_TA_UNI) {
+    if (text.includes(w)) return true;
+  }
+  // spam / fake check
+  if (/(.)\1{4,}/.test(text)) return true; // aaaaaa repeated
+  if (/^[^a-zA-Z\u0B80-\u0BFF]+$/.test(text)) return true; // only symbols
+  return false;
+}
+
+// ── STATE ─────────────────────────────────────────
+let rating = 0;
+let reviews = JSON.parse(localStorage.getItem('iz_reviews') || '[]');
+
+// seed with 3 sample reviews if empty
+if (reviews.length === 0) {
+  reviews = [
+    {id:1,name:'Priya K',city:'Chennai',template:'Princess Magic',rating:5,text:'மிகவும் அழகாக இருந்தது! Invitation பார்த்த உடனே friends எல்லாரும் wow சொன்னாங்க. ₹9-க்கு இப்படி ஒரு design கிடைக்குமா என்று நம்பவே முடியலை. Fast delivery!',date:'2025-03-20',helpful:12,voted:false,color:'#D4006A'},
+    {id:2,name:'Murugan S',city:'Coimbatore',template:'Superhero',rating:5,text:'My son was super excited! Superhero template was perfect for his 7th birthday. Delivery was very fast and the 3D effect looked amazing on WhatsApp. Will order again!',date:'2025-03-22',helpful:8,voted:false,color:'#FF6B00'},
+    {id:3,name:'Kavitha R',city:'Tiruppur',template:'Floral Garden',rating:4,text:'நல்லா இருந்துச்சு, ரொம்ப satisfied. Floral theme என் அம்மாவுக்கு மிகவும் பிடிச்சது. ஒரே ஒரு request — photo upload இன்னும் easy-ஆ இருந்தா நல்லது!',date:'2025-03-24',helpful:5,voted:false,color:'#00897B'},
+  ];
+  save();
+}
+
+const AVATAR_COLORS = ['#D4006A','#FF6B00','#00897B','#7B1FA2','#F5A623','#1565C0','#2E7D32','#C62828'];
+const RATING_LABELS = ['','😞 Poor','😐 Fair','🙂 Good','😊 Great','🤩 Excellent!'];
+
+// ── RATING ────────────────────────────────────────
+function setRating(val) {
+  rating = val;
+  document.querySelectorAll('.star').forEach((s,i) => {
+    s.classList.toggle('lit', i < val);
+  });
+  document.getElementById('ratingTxt').textContent = RATING_LABELS[val];
+  document.getElementById('ratingErr').style.display = 'none';
+}
+
+// ── CHAR COUNTER ──────────────────────────────────
+function onTextInput() {
+  const val = document.getElementById('rText').value;
+  const len = val.length;
+  const cc = document.getElementById('charCount');
+  cc.textContent = `${len}/300`;
+  cc.className = 'char-count' + (len > 260 ? ' warn' : '');
+
+  // real-time bad word check
+  if (containsBadWord(val)) {
+    document.getElementById('badWordWarn').classList.add('show');
+  } else {
+    document.getElementById('badWordWarn').classList.remove('show');
+  }
+  document.getElementById('textErr').style.display = 'none';
+}
+
+// ── SUBMIT ────────────────────────────────────────
+async function submitReview() {
+  const name = document.getElementById('rName').value.trim();
+  const city = document.getElementById('rCity').value.trim();
+  const template = document.getElementById('rTemplate').value;
+  const text = document.getElementById('rText').value.trim();
+
+  // validations
+  let hasErr = false;
+  if (!rating) { document.getElementById('ratingErr').style.display='block'; hasErr=true; }
+  if (!name) { document.getElementById('nameErr').style.display='block'; hasErr=true; }
+  if (text.length < 20) { document.getElementById('textErr').style.display='block'; hasErr=true; }
+  if (hasErr) { toast('⚠️ Please fill all required fields!'); return; }
+
+  // bad word check on name + text
+  if (containsBadWord(name) || containsBadWord(text)) {
+    document.getElementById('badWordWarn').classList.add('show');
+    toast('🚫 Inappropriate words! Please be respectful.');
+    return;
+  }
+
+  // disable btn
+  const btn = document.getElementById('subBtn');
+  btn.disabled = true;
+  document.getElementById('ldr').classList.add('on');
+  await sleep(900);
+  document.getElementById('ldr').classList.remove('on');
+
+  // add review
+  const color = AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+  reviews.unshift({
+    id: Date.now(),
+    name, city, template, rating, text,
+    date: new Date().toISOString().split('T')[0],
+    helpful: 0, voted: false, color
+  });
+  save();
+  updateStats();
+  renderReviews();
+
+  // reset form
+  document.getElementById('rName').value = '';
+  document.getElementById('rCity').value = '';
+  document.getElementById('rTemplate').value = '';
+  document.getElementById('rText').value = '';
+  document.getElementById('charCount').textContent = '0/300';
+  document.getElementById('badWordWarn').classList.remove('show');
+  setRating(0);
+  btn.disabled = false;
+
+  toast('🌟 Review submitted! Thank you!');
+  document.getElementById('reviewsList').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── HELPFUL VOTE ──────────────────────────────────
+function voteHelpful(id) {
+  const rev = reviews.find(r => r.id === id);
+  if (!rev || rev.voted) return;
+  rev.helpful++;
+  rev.voted = true;
+  save();
+  renderReviews();
+}
+
+// ── RENDER ────────────────────────────────────────
+function renderReviews() {
+  const sort = document.getElementById('sortSel').value;
+  let list = [...reviews];
+  if (sort === 'highest') list.sort((a,b) => b.rating - a.rating);
+  else if (sort === 'helpful') list.sort((a,b) => b.helpful - a.helpful);
+  else list.sort((a,b) => b.id - a.id);
+
+  const el = document.getElementById('reviewsList');
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="ei">💬</div><p>இன்னும் reviews இல்லை.<br>முதல் review நீங்களே போடுங்க!</p></div>`;
+    return;
+  }
+
+  el.innerHTML = list.map(r => {
+    const stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+    const initials = r.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const dateStr = new Date(r.date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+    const isVerified = r.rating >= 4;
+    return `
+    <div class="review-card">
+      <div class="rc-top">
+        <div style="display:flex;align-items:center;gap:10px;flex:1">
+          <div class="rc-avatar" style="background:${r.color}">${initials}</div>
+          <div class="rc-meta">
+            <div class="rc-name">${escHtml(r.name)}${r.city?` <span style="font-weight:600;color:var(--muted);font-size:.75rem">· ${escHtml(r.city)}</span>`:''}</div>
+            <div class="rc-date">${dateStr}</div>
+            ${r.template?`<span class="rc-template">🎨 ${escHtml(r.template)}</span>`:''}
+          </div>
+        </div>
+        <div class="rc-stars" style="color:#F5A623;flex-shrink:0">${stars}</div>
+      </div>
+      <div class="rc-body">${escHtml(r.text)}</div>
+      <div class="rc-helpful">
+        <button class="helpful-btn ${r.voted?'voted':''}" onclick="voteHelpful(${r.id})" ${r.voted?'disabled':''}>
+          👍 Helpful ${r.helpful > 0 ? `(${r.helpful})` : ''}
+        </button>
+        ${isVerified?`<span class="rc-verified">✓ Verified Purchase</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats() {
+  const total = reviews.length;
+  const avg = total ? (reviews.reduce((s,r)=>s+r.rating,0)/total).toFixed(1) : '—';
+  const five = reviews.filter(r=>r.rating===5).length;
+  document.getElementById('avgRating').textContent = total ? `${avg}⭐` : '—';
+  document.getElementById('totalReviews').textContent = total;
+  document.getElementById('fiveStars').textContent = five;
+  document.getElementById('reviewsTitle').textContent = `💬 All Reviews (${total})`;
+}
+
+function save() { localStorage.setItem('iz_reviews', JSON.stringify(reviews)); }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function sleep(ms) { return new Promise(r=>setTimeout(r,ms)); }
+function toast(m) { const t=document.getElementById('tst');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3500); }
+
+// init
+updateStats();
+renderReviews();
+</script>
+</body>
+</html>

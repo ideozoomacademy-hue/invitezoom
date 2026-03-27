@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>InviteZoom – Birthday Wishes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--saffron:#FF6B00;--magenta:#D4006A;--teal:#00897B;--gold:#F5A623;--purple:#7B1FA2;--ink:#1a0a00;--muted:#6b5c4e;--bg:#FFF8F0;--r:16px}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;min-height:100vh}
+
+/* CONFETTI */
+.confetti-rain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.cr{position:absolute;top:-20px;border-radius:2px;animation:fall linear infinite}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.cr:nth-child(1){left:5%;background:#FF6B00;animation-duration:3s;width:6px;height:10px}
+.cr:nth-child(2){left:18%;background:#D4006A;animation-duration:3.5s;animation-delay:.5s;width:9px;height:6px;border-radius:50%}
+.cr:nth-child(3){left:32%;background:#F5A623;animation-duration:2.8s;animation-delay:1s;width:7px;height:7px}
+.cr:nth-child(4){left:48%;background:#00897B;animation-duration:3.2s;animation-delay:.3s;width:5px;height:11px}
+.cr:nth-child(5){left:63%;background:#7B1FA2;animation-duration:2.6s;animation-delay:1.3s;border-radius:50%;width:8px;height:8px}
+.cr:nth-child(6){left:78%;background:#FF6B00;animation-duration:3.4s;animation-delay:.7s;width:10px;height:5px}
+.cr:nth-child(7){left:90%;background:#D4006A;animation-duration:2.9s;animation-delay:1.7s;width:6px;height:9px}
+
+/* RANGOLI */
+.rangoli{height:5px;background:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--purple),var(--teal),var(--gold),var(--saffron));background-size:200% 100%;animation:rFlow 3s linear infinite}
+@keyframes rFlow{0%{background-position:0%}100%{background-position:200%}}
+
+/* HEADER */
+.hdr{background:#fff;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--teal)) 1;position:sticky;top:0;z-index:100;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 3px 20px rgba(212,0,106,.1)}
+.logo{font-family:'Fredoka One',cursive;font-size:1.4rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-right{display:flex;align-items:center;gap:7px}
+.back-btn{display:flex;align-items:center;gap:4px;font-size:.74rem;font-weight:800;color:var(--saffron);text-decoration:none;background:#FFF3E0;padding:7px 12px;border-radius:18px;border:2px solid #FFD0B0;white-space:nowrap;transition:all .15s}
+.back-btn:hover{background:var(--saffron);color:#fff;border-color:var(--saffron)}
+.yt-btn{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;font-size:.72rem;font-weight:900;padding:7px 12px;border-radius:18px;text-decoration:none;box-shadow:0 3px 10px rgba(204,0,0,.3);white-space:nowrap;animation:ytG 2s ease-in-out infinite}
+@keyframes ytG{0%,100%{box-shadow:0 3px 10px rgba(204,0,0,.3)}50%{box-shadow:0 3px 18px rgba(204,0,0,.55)}}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,#FFF3E0,#FCE4EC,#F3E5F5,#E0F2F1);background-size:300% 300%;animation:hShift 8s ease infinite;text-align:center;padding:30px 20px 22px;position:relative;overflow:hidden}
+@keyframes hShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hf{position:absolute;font-size:1.4rem;animation:hfloat var(--d,4s) ease-in-out var(--dl,0s) infinite}
+@keyframes hfloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-12px) rotate(5deg)}}
+.hero-big{font-size:3rem;margin-bottom:8px;animation:bigFloat 3s ease-in-out infinite}
+@keyframes bigFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.05)}}
+.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,5vw,2.6rem);color:var(--ink);line-height:1.15;margin-bottom:6px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:.88rem;max-width:360px;margin:0 auto}
+
+/* YT CTA */
+.yt-cta{margin:16px 16px 0;border-radius:18px;background:linear-gradient(135deg,#1a0a00,#3d0000);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:relative;z-index:1;box-shadow:0 6px 24px rgba(204,0,0,.2)}
+.yt-cta-txt h3{font-family:'Fredoka One',cursive;font-size:.95rem;color:#fff;margin-bottom:3px}
+.yt-cta-txt p{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.4}
+.yt-cta-btn{display:inline-flex;align-items:center;gap:6px;background:#ff0000;color:#fff;font-size:.8rem;font-weight:900;padding:9px 16px;border-radius:20px;text-decoration:none;box-shadow:0 3px 12px rgba(255,0,0,.4);flex-shrink:0;white-space:nowrap}
+.yt-cta-btn:hover{transform:translateY(-2px)}
+
+/* CATEGORY TABS */
+.cat-wrap{padding:18px 14px 0;position:relative;z-index:1}
+.cat-title{font-family:'Fredoka One',cursive;font-size:1.05rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.cat-tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 16px;border-radius:16px;border:2px solid #FFD0B0;
+  background:#fff;cursor:pointer;flex-shrink:0;transition:all .18s;
+  font-family:'Nunito',sans-serif;
+}
+.cat-tab:hover{border-color:var(--magenta);transform:translateY(-2px)}
+.cat-tab.active{background:linear-gradient(135deg,var(--saffron),var(--magenta));border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(212,0,106,.3);transform:translateY(-2px)}
+.cat-tab .ct-icon{font-size:1.6rem}
+.cat-tab .ct-lbl{font-size:.72rem;font-weight:800;color:var(--ink);white-space:nowrap}
+.cat-tab.active .ct-lbl{color:#fff}
+
+/* WISHES GRID */
+.wishes-wrap{padding:16px 14px 50px;position:relative;z-index:1}
+.wishes-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:540px){.wishes-grid{grid-template-columns:1fr 1fr}}
+
+/* WISH CARD */
+.wish-card{
+  background:#fff;border-radius:20px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(212,0,106,.08);
+  border:2px solid #FFE8D0;
+  transition:transform .18s,box-shadow .18s;
+  position:relative;
+}
+.wish-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(212,0,106,.15)}
+
+/* card top — festive gradient */
+.wc-top{
+  padding:20px 18px 16px;
+  position:relative;overflow:hidden;
+  text-align:center;
+}
+.wc-top::before{content:'◆◈◆◈◆';position:absolute;top:6px;left:0;right:0;text-align:center;font-size:.45rem;letter-spacing:5px;opacity:.25}
+.wc-top::after{content:'◆◈◆◈◆';position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:.45rem;letter-spacing:5px;opacity:.2}
+.wc-icon{font-size:2rem;margin-bottom:8px;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.15));animation:wIco 3s ease-in-out infinite}
+@keyframes wIco{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.08) rotate(3deg)}}
+.wc-tag{display:inline-block;font-size:.65rem;font-weight:900;color:#fff;padding:3px 10px;border-radius:10px;margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase}
+.wc-wish-ta{font-size:.88rem;color:#fff;line-height:1.7;font-weight:600;margin-bottom:8px;text-align:left}
+.wc-wish-en{font-size:.78rem;color:rgba(255,255,255,.8);line-height:1.6;text-align:left;font-style:italic}
+
+/* card bottom */
+.wc-bottom{padding:12px 14px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px dashed #FFD0B0}
+.copy-btn{
+  display:flex;align-items:center;gap:5px;
+  font-size:.72rem;font-weight:800;color:var(--saffron);
+  background:#FFF3E0;border:1.5px solid #FFD0B0;border-radius:14px;
+  padding:6px 12px;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;
+}
+.copy-btn:hover{background:var(--saffron);color:#fff;border-color:var(--saffron)}
+.copy-btn.copied{background:var(--teal);color:#fff;border-color:var(--teal)}
+.wa-btn{
+  display:flex;align-items:center;gap:5px;
+  font-size:.78rem;font-weight:900;color:#fff;
+  background:#25D366;border:none;border-radius:14px;
+  padding:8px 14px;cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif;
+  box-shadow:0 3px 12px rgba(37,211,102,.3);
+}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(37,211,102,.4)}
+.wa-btn:active{transform:scale(.97)}
+
+/* TOAST */
+.tst{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:linear-gradient(135deg,var(--saffron),var(--magenta));color:#fff;padding:11px 22px;border-radius:30px;font-size:.82rem;font-weight:800;z-index:500;transition:transform .3s;white-space:nowrap;box-shadow:0 8px 24px rgba(212,0,106,.35)}
+.tst.on{transform:translateX(-50%) translateY(0)}
+
+/* FOOTER */
+.foot{text-align:center;padding:20px 16px;color:var(--muted);font-size:.75rem;border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--teal)) 1;background:#fff}
+</style>
+</head>
+<body>
+
+<div class="confetti-rain" aria-hidden="true">
+  <div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div>
+  <div class="cr"></div><div class="cr"></div><div class="cr"></div>
+</div>
+<div class="tst" id="tst"></div>
+
+<div class="rangoli"></div>
+<header class="hdr">
+  <div class="logo">🎂 Wishes</div>
+  <div class="hdr-right">
+    <a class="back-btn" href="invitezoom.html">← InviteZoom</a>
+    <a class="yt-btn" href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener">
+      <svg width="13" height="10" viewBox="0 0 16 12" fill="white"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
+      Bday Zone
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <span class="hf" style="top:10%;left:5%;--d:3.5s;--dl:0s">🎈</span>
+  <span class="hf" style="top:12%;right:6%;--d:4s;--dl:.5s">🎉</span>
+  <span class="hf" style="bottom:12%;left:8%;--d:3s;--dl:1s">💐</span>
+  <span class="hf" style="bottom:15%;right:7%;--d:4.5s;--dl:.3s">✨</span>
+  <div class="hero-big">🎂</div>
+  <h1>Birthday <em>Wishes</em></h1>
+  <p>Copy பண்ணி WhatsApp-ல் share பண்ணுங்க! Tamil & English ✨</p>
+</section>
+
+<!-- YT CTA -->
+<div class="yt-cta">
+  <div class="yt-cta-txt">
+    <h3>🎬 Video Wishes வேணுமா?</h3>
+    <p>Special birthday video songs & wishes — Bday Zone-ல் பாருங்க!</p>
+  </div>
+  <a class="yt-cta-btn" href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener">
+    <svg width="13" height="10" viewBox="0 0 16 12" fill="white"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
+    Watch Now 🔔
+  </a>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="cat-wrap">
+  <div class="cat-title">💝 Choose Category</div>
+  <div class="cat-tabs" id="catTabs">
+    <div class="cat-tab active" onclick="showCat('daughter',this)">
+      <span class="ct-icon">👧</span><span class="ct-lbl">Daughter</span>
+    </div>
+    <div class="cat-tab" onclick="showCat('wife',this)">
+      <span class="ct-icon">💑</span><span class="ct-lbl">Wife / Husband</span>
+    </div>
+    <div class="cat-tab" onclick="showCat('friends',this)">
+      <span class="ct-icon">🤝</span><span class="ct-lbl">Friends</span>
+    </div>
+    <div class="cat-tab" onclick="showCat('grandparents',this)">
+      <span class="ct-icon">👴</span><span class="ct-lbl">Grandparents</span>
+    </div>
+    <div class="cat-tab" onclick="showCat('siblings',this)">
+      <span class="ct-icon">👫</span><span class="ct-lbl">Bro / Sis</span>
+    </div>
+  </div>
+</div>
+
+<!-- WISHES -->
+<div class="wishes-wrap">
+  <div class="wishes-grid" id="wishesGrid"></div>
+</div>
+
+<div class="rangoli"></div>
+<footer class="foot">
+  <a href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;color:#cc0000;font-weight:800;font-size:.76rem;text-decoration:none;margin-bottom:5px">
+    <svg width="12" height="9" viewBox="0 0 16 12" fill="#cc0000"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
+    Bday Zone — youtube.com/@Nostalgic2106
+  </a>
+  <p style="font-size:.72rem">© 2025 DJ Groups. All Rights Reserved.</p>
+</footer>
+
+<script>
+const WISHES = {
+  daughter: {
+    icon:'👧', label:'Daughter', color:'linear-gradient(135deg,#D4006A,#7B1FA2)', tag:'💖 Daughter', tagColor:'#7B1FA2',
+    wishes:[
+      {ta:'என் அன்பு மகளே! உன் பிறந்தநாளில் இறைவன் உன் வாழ்வை மலர்களாலும் வெற்றியாலும் நிரப்பட்டும். நீ எப்போதும் மகிழ்ச்சியாக இரு! 🌸', en:'My dearest daughter! May God fill your life with flowers and victories. Be happy always! Happy Birthday! 🎂'},
+      {ta:'என் கண்மணியே! உன்னை பெற்றதால் என் வாழ்வு பொருள் பெற்றது. உன் கனவுகள் எல்லாம் நனவாகட்டும்! இனிய பிறந்தநாள் வாழ்த்துக்கள்! ✨', en:'My precious one! Having you gave meaning to my life. May all your dreams come true! Wishing you a very Happy Birthday! ✨'},
+      {ta:'என் பொன்னே! நீ புன்னகைக்கும்போது என் உலகம் வெளிச்சமாகிறது. இன்று உன் நாள் — கொண்டாடு, மகிழ்! 🎉', en:'My golden one! When you smile, my world brightens up. Today is your day — celebrate and rejoice! 🎉'},
+      {ta:'என் அன்பு பூவே! உன் ஒவ்வொரு நாளும் புதுமையாக இருக்கட்டும். உன்னை நேசிக்கிறேன்! இனிய பிறந்தநாள்! 💐', en:'My lovely flower! May every day of yours be wonderful. I love you! Happy Birthday! 💐'},
+    ]
+  },
+  wife: {
+    icon:'💑', label:'Wife / Husband', color:'linear-gradient(135deg,#FF6B00,#D4006A)', tag:'❤️ Partner', tagColor:'#D4006A',
+    wishes:[
+      {ta:'என் இதயத்தின் ஒரு பகுதியே! உன்னோடு கழிக்கும் ஒவ்வொரு நாளும் ஒரு பரிசு. இனிய பிறந்தநாள் வாழ்த்துக்கள் என் அன்பே! ❤️', en:'You are a piece of my heart! Every day with you is a gift. Happy Birthday my love! ❤️'},
+      {ta:'உன் சிரிப்பு என் வாழ்வின் இசை. உன் அன்பு என் உலகின் வெளிச்சம். இன்று உன் நாள் — எல்லாமே உனக்காக! 🌹', en:'Your laughter is the music of my life. Your love is the light of my world. Today is all yours! 🌹'},
+      {ta:'நீ இல்லாத வாழ்க்கையை என்னால் கற்பனை கூட செய்ய முடியாது. இனிய பிறந்தநாள் என் உயிரே! 💕', en:'I cannot even imagine a life without you. Happy Birthday my life! May this year bring us more joy! 💕'},
+      {ta:'உன்னோடு இருக்கும் ஒவ்வொரு தருணமும் அழகானது. என்றும் இப்படியே இரு! மிக்க அன்போடு — இனிய பிறந்தநாள்! 🥂', en:'Every moment with you is beautiful. Stay just the way you are! With all my love — Happy Birthday! 🥂'},
+    ]
+  },
+  friends: {
+    icon:'🤝', label:'Friends', color:'linear-gradient(135deg,#00897B,#1565C0)', tag:'🤝 Friends', tagColor:'#00897B',
+    wishes:[
+      {ta:'என் அன்பு தோழா/தோழியே! உன் நட்பு என் வாழ்வின் மிகப்பெரிய செல்வம். இனிய பிறந்தநாள்! மகிழ்ச்சியாக இரு! 🎊', en:'My dear friend! Your friendship is the greatest wealth of my life. Happy Birthday! Stay happy always! 🎊'},
+      {ta:'நீ இருக்கும்போது வாழ்க்கை மிகவும் மகிழ்ச்சியாக இருக்கிறது! உன் பிறந்தநாள் இன்னும் சிறப்பாக இருக்கட்டும்! 🎉', en:'Life is so much more fun when you are around! May your birthday be even more special! 🎉'},
+      {ta:'என் best friend-க்கு! உன்னோடு செலவிட்ட ஒவ்வொரு நிமிடமும் மறக்க முடியாத நினைவு. Happy Birthday பா/மா! 🥳', en:'To my best friend! Every minute spent with you is an unforgettable memory. Happy Birthday! 🥳'},
+      {ta:'நண்பா/நண்பி! உன் வாழ்க்கை எப்போதும் party மூட்டில் இருக்கட்டும்! இனிய பிறந்தநாள் வாழ்த்துக்கள்! 🎈', en:'Friend! May your life always be in party mood! Wishing you the happiest birthday ever! 🎈'},
+    ]
+  },
+  grandparents: {
+    icon:'👴', label:'Grandparents', color:'linear-gradient(135deg,#7B1FA2,#1565C0)', tag:'🙏 Elders', tagColor:'#7B1FA2',
+    wishes:[
+      {ta:'என் அன்பு தாத்தா/பாட்டிக்கு! உங்கள் ஆசிர்வாதம் எனக்கு எல்லாவற்றையும் விட மேலானது. இனிய பிறந்தநாள் வாழ்த்துக்கள்! 🙏', en:'To my dearest grandparent! Your blessings mean everything to me. Wishing you a very Happy Birthday! 🙏'},
+      {ta:'உங்கள் அன்பும் அரவணைப்பும் என் வாழ்வின் ஆதாரம். நீண்ட ஆயுளுடன் ஆரோக்கியமாக வாழட்டும்! இனிய பிறந்தநாள்! 💐', en:'Your love and care are the foundation of my life. May you live long and healthy! Happy Birthday! 💐'},
+      {ta:'தாத்தா/பாட்டி! உங்கள் கதைகளும் அறிவுரைகளும் என் வழிகாட்டி. உங்களை நேசிக்கிறேன்! இனிய பிறந்தநாள்! ✨', en:'Grandpa/Grandma! Your stories and wisdom are my guide. I love you so much! Happy Birthday! ✨'},
+      {ta:'உங்கள் புன்னகை காண்பதே எனக்கு மிகப்பெரிய சந்தோஷம். இந்த நாள் மிக சிறப்பாக இருக்கட்டும்! 🎂', en:'Seeing your smile is my greatest happiness. May this day be very special for you! Happy Birthday! 🎂'},
+    ]
+  },
+  siblings: {
+    icon:'👫', label:'Bro / Sis', color:'linear-gradient(135deg,#F5A623,#FF6B00)', tag:'👫 Sibling', tagColor:'#FF6B00',
+    wishes:[
+      {ta:'என் அன்பு அண்ணா/அக்கா/தம்பி/தங்கையே! நீ இல்லாமல் என் வாழ்க்கை முழுமை பெறாது. இனிய பிறந்தநாள்! 🎊', en:'My dear sibling! My life would be incomplete without you. Happy Birthday! 🎊'},
+      {ta:'நாம் சண்டையிட்டாலும் நேசிக்கிறோம்! அதுவே நம் உறவு. உனக்கு மிகவும் Happy Birthday! 🎉', en:'We fight but we love each other! That is our bond. Wishing you a very Happy Birthday! 🎉'},
+      {ta:'என் best partner in crime! என்னோடு எல்லா தடுமாற்றங்களையும் தாண்டி வந்த நீ — இன்றும் எப்போதும் என் hero! 🦸', en:'My best partner in crime! You who crossed all obstacles with me — today and always my hero! Happy Birthday! 🦸'},
+      {ta:'உன்னை annoying என்று சொல்வேன், ஆனால் உன்னை விட யாரும் special இல்லை! இனிய பிறந்தநாள் என் darling! 💛', en:'I call you annoying but nobody is more special than you! Happy Birthday my darling sibling! 💛'},
+    ]
+  }
+};
+
+let activeCat = 'daughter';
+
+function showCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderWishes();
+}
+
+function renderWishes() {
+  const data = WISHES[activeCat];
+  const grid = document.getElementById('wishesGrid');
+  grid.innerHTML = data.wishes.map((w, i) => `
+    <div class="wish-card">
+      <div class="wc-top" style="background:${data.color}">
+        <span class="wc-icon">${data.icon}</span>
+        <span class="wc-tag" style="background:${data.tagColor}">${data.tag}</span>
+        <div class="wc-wish-ta">${w.ta}</div>
+        <div class="wc-wish-en">${w.en}</div>
+      </div>
+      <div class="wc-bottom">
+        <button class="copy-btn" id="copy-${activeCat}-${i}" onclick="copyWish(${i})">
+          📋 Copy
+        </button>
+        <button class="wa-btn" onclick="shareWA(${i})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Share
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function getWishText(i) {
+  const w = WISHES[activeCat].wishes[i];
+  return `🎂 Happy Birthday! 🎂\n\n${w.ta}\n\n${w.en}\n\n🎉 Wish you lots of love & happiness!\n\n— Sent via InviteZoom 🎊`;
+}
+
+function copyWish(i) {
+  const text = getWishText(i);
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(`copy-${activeCat}-${i}`);
+    btn.textContent = '✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = '📋 Copy'; btn.classList.remove('copied'); }, 2000);
+    toast('📋 Wish copied to clipboard!');
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    toast('📋 Copied!');
+  });
+}
+
+function shareWA(i) {
+  const text = getWishText(i);
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function toast(m) {
+  const t = document.getElementById('tst');
+  t.textContent = m; t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 2800);
+}
+
+renderWishes();
+</script>
+</body>
+</html>
