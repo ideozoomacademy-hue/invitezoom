@@ -1,0 +1,6 @@
+{
+  "routes": [
+    { "src": "/wishes", "dest": "/wishes.html" },
+    { "src": "/feedback", "dest": "/feedback.html" }
+  ]
+}
