@@ -1,740 +1,914 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>InviteZoom – 3D Birthday Invitations</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>InviteZoom – Free 3D Digital Invitations</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&family=Cinzel:wght@600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --saffron:#FF6B00;--magenta:#D4006A;--teal:#00897B;--gold:#F5A623;
-  --deeprose:#C2185B;--purple:#7B1FA2;--ink:#1a0a00;--muted:#6b5c4e;
-  --bg:#FFF8F0;--r:16px;
-}
+:root{--sf:#FF6B00;--mg:#D4006A;--tl:#00897B;--gd:#F5A623;--ink:#1a0a00;--mt:#6b5c4e;--bg:#FFF8F0;--r:14px}
 html{scroll-behavior:smooth}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;min-height:100vh}
-
-/* ── CSS CONFETTI RAIN (zero JS, page load) ─────── */
-.confetti-rain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden}
-.cr{position:absolute;top:-20px;width:8px;height:8px;border-radius:2px;animation:fall linear infinite}
-@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-.cr:nth-child(1){left:5%;background:#FF6B00;animation-duration:2.8s;animation-delay:0s;width:6px;height:10px}
-.cr:nth-child(2){left:12%;background:#D4006A;animation-duration:3.2s;animation-delay:.4s;width:10px;height:6px;border-radius:50%}
-.cr:nth-child(3){left:22%;background:#F5A623;animation-duration:2.5s;animation-delay:.8s}
-.cr:nth-child(4){left:33%;background:#00897B;animation-duration:3.5s;animation-delay:.2s;width:5px;height:12px}
-.cr:nth-child(5){left:44%;background:#7B1FA2;animation-duration:2.9s;animation-delay:1s;border-radius:50%}
-.cr:nth-child(6){left:55%;background:#FF6B00;animation-duration:3.1s;animation-delay:.6s;width:9px;height:5px}
-.cr:nth-child(7){left:66%;background:#D4006A;animation-duration:2.7s;animation-delay:1.2s}
-.cr:nth-child(8){left:75%;background:#F5A623;animation-duration:3.3s;animation-delay:.3s;border-radius:50%}
-.cr:nth-child(9){left:85%;background:#00897B;animation-duration:2.6s;animation-delay:.9s;width:7px;height:11px}
-.cr:nth-child(10){left:94%;background:#7B1FA2;animation-duration:3s;animation-delay:1.5s}
-.cr:nth-child(11){left:8%;background:#F5A623;animation-duration:3.4s;animation-delay:1.8s;width:5px;height:8px}
-.cr:nth-child(12){left:28%;background:#FF6B00;animation-duration:2.4s;animation-delay:2.1s;border-radius:50%}
-.cr:nth-child(13){left:50%;background:#D4006A;animation-duration:3.6s;animation-delay:.7s}
-.cr:nth-child(14){left:70%;background:#00897B;animation-duration:2.8s;animation-delay:1.4s;width:11px;height:5px}
-.cr:nth-child(15){left:90%;background:#7B1FA2;animation-duration:3.2s;animation-delay:2s;border-radius:50%}
-
-/* ── RANGOLI BORDER (CSS only) ───────────────────── */
-.rangoli-border{
-  height:6px;
-  background:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--purple),var(--teal),var(--gold),var(--saffron));
-  background-size:200% 100%;
-  animation:rangoliFlow 3s linear infinite;
-}
-@keyframes rangoliFlow{0%{background-position:0% 0%}100%{background-position:200% 0%}}
-
-/* ── HEADER ─────────────────────────────────────── */
-.hdr{
-  background:#fff;
-  border-bottom:3px solid transparent;
-  border-image:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--teal)) 1;
-  position:sticky;top:0;z-index:200;
-  padding:10px 14px;
-  display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 3px 20px rgba(212,0,106,.12);
-}
-.logo{font-family:'Fredoka One',cursive;font-size:1.5rem;
-  background:linear-gradient(135deg,var(--saffron),var(--magenta));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  display:flex;align-items:center;gap:5px}
-.logo-sub{font-size:.6rem;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;-webkit-text-fill-color:var(--muted)}
-.hdr-right{display:flex;align-items:center;gap:7px}
-.yt-btn{
-  display:flex;align-items:center;gap:5px;
-  background:linear-gradient(135deg,#ff0000,#cc0000);
-  color:#fff;font-size:.72rem;font-weight:900;
-  padding:7px 13px;border-radius:20px;text-decoration:none;
-  box-shadow:0 3px 12px rgba(204,0,0,.35);
-  animation:ytGlow 2s ease-in-out infinite;
-  white-space:nowrap;
-}
-@keyframes ytGlow{0%,100%{box-shadow:0 3px 12px rgba(204,0,0,.35)}50%{box-shadow:0 3px 20px rgba(204,0,0,.6)}}
-.yt-btn:hover{transform:translateY(-1px)}
-.price-pill{
-  background:linear-gradient(135deg,var(--saffron),var(--gold));
-  color:#fff;font-size:.72rem;font-weight:900;
-  padding:7px 13px;border-radius:20px;
-  box-shadow:0 3px 12px rgba(255,107,0,.35);
-  white-space:nowrap;
-}
-
-/* ── YT STRIP ────────────────────────────────────── */
-.yt-strip{
-  background:linear-gradient(135deg,#1a0a00,#3d0000);
-  padding:9px 16px;
-  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
-}
-.yt-strip-txt{font-size:.8rem;color:rgba(255,255,255,.7)}
-.yt-strip-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  background:#ff0000;color:#fff;font-size:.78rem;font-weight:900;
-  padding:5px 14px;border-radius:18px;text-decoration:none;
-  box-shadow:0 2px 10px rgba(255,0,0,.4);
-}
-.yt-strip-sub{font-size:.75rem;color:rgba(255,255,255,.5)}
-
-/* ── HERO ────────────────────────────────────────── */
-.hero{
-  background:linear-gradient(160deg,#FFF3E0,#FCE4EC,#F3E5F5,#E0F2F1);
-  background-size:300% 300%;
-  animation:heroShift 8s ease infinite;
-  padding:36px 20px 28px;
-  text-align:center;position:relative;overflow:hidden;
-  border-bottom:1px solid rgba(212,0,106,.1);
-}
-@keyframes heroShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-
-/* CSS 3D Cake ─────────────────────── */
-.cake-wrap{
-  position:relative;width:110px;height:110px;margin:0 auto 20px;
-  animation:cakeFloat 3s ease-in-out infinite;
-  transform-style:preserve-3d;perspective:300px;
-}
-@keyframes cakeFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
-.cake-plate{
-  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  width:90px;height:10px;background:linear-gradient(135deg,#F5A623,#FF6B00);
-  border-radius:50%;box-shadow:0 4px 16px rgba(255,107,0,.4);
-}
-.cake-body{
-  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
-  width:70px;height:45px;
-  background:linear-gradient(135deg,#FF6B8A,#D4006A);
-  border-radius:8px 8px 4px 4px;
-  box-shadow:4px 4px 0 rgba(0,0,0,.15);
-}
-.cake-body::before{
-  content:'';position:absolute;top:8px;left:0;right:0;height:4px;
-  background:rgba(255,255,255,.4);
-}
-.cake-body::after{
-  content:'';position:absolute;bottom:8px;left:0;right:0;height:4px;
-  background:rgba(255,255,255,.3);
-}
-.cake-top{
-  position:absolute;bottom:55px;left:50%;transform:translateX(-50%);
-  width:70px;height:30px;
-  background:linear-gradient(135deg,#F5A623,#FF6B00);
-  border-radius:8px 8px 4px 4px;
-  box-shadow:4px 4px 0 rgba(0,0,0,.12);
-}
-.cake-top::before{
-  content:'';position:absolute;top:6px;left:0;right:0;height:3px;
-  background:rgba(255,255,255,.4);
-}
-.cake-cream{
-  position:absolute;bottom:85px;left:50%;transform:translateX(-50%);
-  width:80px;height:12px;
-  background:#fff;border-radius:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
-.cake-candle{
-  position:absolute;bottom:97px;left:50%;transform:translateX(-50%);
-  width:8px;height:22px;background:linear-gradient(135deg,#7B1FA2,#D4006A);
-  border-radius:4px;
-}
-.cake-flame{
-  position:absolute;bottom:119px;left:50%;transform:translateX(-50%);
-  width:10px;height:14px;
-  background:linear-gradient(180deg,#FFF176,#FF6B00,#D4006A);
-  border-radius:50% 50% 40% 40%;
-  animation:flicker .5s ease-in-out infinite alternate;
-  box-shadow:0 0 10px #FF6B00;
-}
-@keyframes flicker{0%{transform:translateX(-50%) scaleX(1) scaleY(1)}100%{transform:translateX(-50%) scaleX(.8) scaleY(1.1)}}
-.cake-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
-.cake-dot{width:7px;height:7px;border-radius:50%;background:#fff;opacity:.7}
-
-/* floating emojis in hero */
-.hero-float{position:absolute;font-size:1.4rem;animation:heroFloat var(--hd,4s) ease-in-out var(--hdelay,0s) infinite}
-@keyframes heroFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-15px) rotate(5deg)}}
-
-.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,6vw,3rem);color:var(--ink);line-height:1.1;margin-bottom:8px}
-.hero h1 em{
-  font-style:normal;
-  background:linear-gradient(135deg,var(--saffron),var(--magenta),var(--purple));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.hero-sub{color:var(--muted);font-size:.9rem;max-width:380px;margin:0 auto 18px;line-height:1.6}
-.steps-row{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:2px}
-.schip{display:flex;align-items:center;gap:5px;font-size:.73rem;font-weight:800;color:var(--muted);padding:3px 7px}
-.schip .n{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,var(--saffron),var(--magenta));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;flex-shrink:0}
-.sarr{color:#ddd;font-size:.9rem}
-
-/* ── FILTER BAR ──────────────────────────────────── */
-.fbar{
-  background:#fff;
-  border-bottom:3px solid transparent;
-  border-image:linear-gradient(90deg,var(--saffron),var(--magenta),var(--teal)) 1;
-  padding:10px 12px;overflow-x:auto;display:flex;gap:7px;
-  scrollbar-width:none;position:sticky;top:53px;z-index:190;
-  box-shadow:0 2px 12px rgba(212,0,106,.08);
-}
-.fbar::-webkit-scrollbar{display:none}
-.fchip{
-  padding:6px 14px;border-radius:20px;border:2px solid #FFD0B0;
-  background:#FFF8F0;font-family:'Nunito',sans-serif;font-size:.75rem;
-  font-weight:800;color:var(--saffron);cursor:pointer;white-space:nowrap;
-  transition:all .15s;flex-shrink:0;
-}
-.fchip:hover{border-color:var(--magenta);color:var(--magenta);background:#FFF0F5}
-.fchip.on{background:linear-gradient(135deg,var(--saffron),var(--magenta));border-color:transparent;color:#fff;box-shadow:0 3px 12px rgba(212,0,106,.3)}
-
-/* ── GALLERY ─────────────────────────────────────── */
-.gallery{padding:18px 12px 50px;position:relative;z-index:2}
-.gtitle{
-  font-family:'Fredoka One',cursive;font-size:1.1rem;
-  background:linear-gradient(135deg,var(--saffron),var(--magenta));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:14px;display:flex;align-items:center;gap:6px;
-}
-.ggrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(min-width:480px){.ggrid{grid-template-columns:repeat(3,1fr)}}
-@media(min-width:700px){.ggrid{grid-template-columns:repeat(4,1fr)}}
-
-/* ── 3D CARD ─────────────────────────────────────── */
-.card3d{perspective:900px;cursor:pointer}
-.card3d-inner{
-  border-radius:var(--r);overflow:hidden;background:#fff;
-  box-shadow:0 4px 20px rgba(212,0,106,.1);
-  transition:transform .12s ease-out,box-shadow .2s;
-  transform-style:preserve-3d;will-change:transform;
-  border:2px solid transparent;
-}
-.card3d:hover .card3d-inner{
-  box-shadow:0 16px 48px rgba(212,0,106,.22);
-  border-color:var(--magenta);
-}
-.thumb{
-  width:100%;aspect-ratio:3/4;
-  position:relative;overflow:hidden;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:10px;
-  transform-style:preserve-3d;
-}
-/* rangoli corner dots */
-.thumb::before{
-  content:'◆';position:absolute;top:6px;left:6px;
-  font-size:.6rem;color:rgba(255,255,255,.4);
-}
-.thumb::after{
-  content:'◆';position:absolute;bottom:6px;right:6px;
-  font-size:.6rem;color:rgba(255,255,255,.4);
-}
-.th-icon{font-size:2.4rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25));margin-bottom:5px;display:block;transform:translateZ(20px)}
-.th-lbl{font-family:'Fredoka One',cursive;font-size:.8rem;text-align:center;text-shadow:0 2px 4px rgba(0,0,0,.3);transform:translateZ(20px)}
-.th-bal{position:absolute;font-size:.95rem;opacity:.7;transform:translateZ(14px)}
-.card-foot{
-  padding:7px 10px;background:#fff;
-  display:flex;align-items:center;justify-content:space-between;
-  border-top:2px solid #FFF0F0;
-}
-.card-name{font-size:.72rem;font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:75%}
-.card-price{
-  font-size:.68rem;font-weight:900;
-  background:linear-gradient(135deg,var(--saffron),var(--gold));
-  color:#fff;padding:2px 8px;border-radius:8px;
-}
-
-/* ── MODAL ───────────────────────────────────────── */
-.overlay{display:none;position:fixed;inset:0;background:rgba(26,10,0,.65);backdrop-filter:blur(6px);z-index:300;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.overlay.on{display:flex;align-items:flex-start;justify-content:center;padding:10px}
-.mbox{background:#fff;border-radius:22px;width:100%;max-width:500px;box-shadow:0 32px 80px rgba(0,0,0,.35);overflow:hidden;margin:auto;animation:slideUp .22s ease}
-@keyframes slideUp{from{transform:translateY(26px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mhdr{
-  padding:13px 16px 11px;display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(135deg,var(--saffron),var(--magenta));
-}
-.mhdr h2{font-family:'Fredoka One',cursive;font-size:1rem;color:#fff}
-.mclose{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.2);cursor:pointer;font-size:.85rem;color:#fff;transition:background .15s}
-.mclose:hover{background:rgba(255,255,255,.35)}
-
-/* 3D INVITE STAGE */
-.inv-stage{
-  padding:14px;
-  background:linear-gradient(160deg,#1a0a00,#3d0030,#001a16);
-  position:relative;overflow:hidden;min-height:240px;
-  display:flex;align-items:center;justify-content:center;
-}
-.inv-stage::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 30% 50%,rgba(255,107,0,.15),transparent 55%),
-             radial-gradient(ellipse at 70% 50%,rgba(212,0,106,.12),transparent 55%);
-}
-/* rangoli dots pattern */
-.inv-stage::after{
-  content:'◆ ◈ ◆ ◈ ◆';position:absolute;bottom:8px;left:0;right:0;
-  text-align:center;font-size:.5rem;color:rgba(245,166,35,.3);letter-spacing:8px;
-}
-.inv3d-wrap{perspective:1000px;width:100%;max-width:320px}
-.inv3d{
-  position:relative;transform-style:preserve-3d;
-  animation:float3d 4s ease-in-out infinite;
-}
-@keyframes float3d{0%,100%{transform:rotateY(-5deg) rotateX(3deg) translateY(0)}50%{transform:rotateY(5deg) rotateX(-2deg) translateY(-9px)}}
-.inv-card-body{
-  border-radius:18px;overflow:hidden;
-  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 20px 60px rgba(0,0,0,.55),0 4px 12px rgba(0,0,0,.3);
-}
-.inv3d-shadow{position:absolute;bottom:-18px;left:10%;right:10%;height:18px;background:rgba(0,0,0,.45);border-radius:50%;filter:blur(8px);animation:shPulse 4s ease-in-out infinite}
-@keyframes shPulse{0%,100%{transform:scaleX(1);opacity:.5}50%{transform:scaleX(.84);opacity:.28}}
-.ball-f{position:absolute;font-size:1.3rem;animation:balF var(--bd,3s) ease-in-out var(--bdel,0s) infinite;transform:translateZ(50px);pointer-events:none}
-@keyframes balF{0%,100%{transform:translateZ(50px) translateY(0) rotate(-4deg)}50%{transform:translateZ(70px) translateY(-10px) rotate(4deg)}}
-.conf-f{position:absolute;font-size:.9rem;animation:confF var(--cd,3s) ease-in-out var(--cdel,0s) infinite;transform:translateZ(60px);pointer-events:none}
-@keyframes confF{0%{transform:translateZ(60px) translateY(0) rotate(0deg);opacity:.9}50%{transform:translateZ(80px) translateY(-11px) rotate(180deg);opacity:1}100%{transform:translateZ(60px) translateY(0) rotate(360deg);opacity:.9}}
-
-/* INVITATION INNER */
-.inv-inner{padding:26px 20px;text-align:center;position:relative;font-family:'Nunito',sans-serif}
-/* rangoli top border */
-.inv-inner::before{content:'◆◈◆◈◆◈◆';position:absolute;top:8px;left:0;right:0;text-align:center;font-size:.45rem;letter-spacing:4px;opacity:.3}
-.inv-photo{width:78px;height:78px;border-radius:50%;object-fit:cover;margin:0 auto 11px;display:block;border:4px solid rgba(255,255,255,.5);box-shadow:0 4px 14px rgba(0,0,0,.25)}
-.inv-main-icon{font-size:2rem;margin-bottom:7px;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.2))}
-.inv-title{font-family:'Fredoka One',cursive;font-size:1.85rem;line-height:1.1;margin-bottom:4px;text-shadow:2px 2px 0 rgba(0,0,0,.12)}
-.inv-sub{font-size:.82rem;font-weight:700;margin-bottom:12px;opacity:.88}
-.inv-divider{border:none;height:1px;background:currentColor;opacity:.18;margin:10px 0}
-.inv-detail{margin-bottom:8px}
-.inv-detail-lbl{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;opacity:.6;margin-bottom:2px}
-.inv-detail-val{font-size:.83rem;font-weight:700}
-.inv-msg{font-size:.76rem;border-radius:9px;padding:8px 11px;margin:9px 0;opacity:.9}
-.inv-rsvp-lbl{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;opacity:.6}
-.inv-rsvp-val{font-size:.95rem;font-weight:900}
-.inv-close-line{font-size:.75rem;font-style:italic;opacity:.68;margin-top:9px}
-.inv-emojis{font-size:1.3rem;margin-top:7px;letter-spacing:3px}
-
-/* ── FORM ────────────────────────────────────────── */
-.mbody{padding:16px}
-.ph-zone{border:2px dashed #FFD0B0;border-radius:12px;padding:15px;text-align:center;cursor:pointer;background:#FFF8F0;transition:all .15s;position:relative;margin-bottom:14px}
-.ph-zone:hover{border-color:var(--magenta);background:#FFF0F5}
-.ph-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.ph-zone-ico{font-size:1.6rem;margin-bottom:3px}
-.ph-zone h4{font-size:.8rem;font-weight:800;color:var(--ink);margin-bottom:2px}
-.ph-zone p{font-size:.7rem;color:var(--muted)}
-#phPrevWrap{display:none;align-items:center;gap:10px;margin-bottom:14px;background:#FFF8F0;padding:9px 12px;border-radius:10px}
-#phPrev{width:48px;height:48px;border-radius:50%;object-fit:cover;border:3px solid var(--magenta)}
-.ph-rm{font-size:.73rem;color:var(--magenta);font-weight:700;cursor:pointer}
-.sec-lbl{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--saffron);margin-bottom:6px;display:block}
-.lrow{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
-.lbtn{padding:8px 4px;border:2px solid #FFD0B0;border-radius:9px;background:#FFF8F0;font-family:'Nunito',sans-serif;font-size:.76rem;font-weight:800;color:var(--saffron);cursor:pointer;text-align:center;transition:all .15s}
-.lbtn:hover{border-color:var(--magenta);color:var(--magenta)}
-.lbtn.sel{background:linear-gradient(135deg,var(--saffron),var(--magenta));border-color:transparent;color:#fff}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
-.ffull{grid-column:1/-1}
-.fg{display:flex;flex-direction:column;gap:4px}
-.fg label{font-size:.65rem;font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
-.fg input,.fg textarea{padding:9px 11px;border:2px solid #FFD0B0;border-radius:9px;font-family:'Nunito',sans-serif;font-size:.87rem;color:var(--ink);background:#FFF8F0;outline:none;transition:all .15s}
-.fg input:focus,.fg textarea:focus{border-color:var(--magenta);background:#fff;box-shadow:0 0 0 3px rgba(212,0,106,.1)}
-.fg textarea{resize:vertical;min-height:56px}
-.pbox{background:linear-gradient(135deg,#FFF8F0,#FFF0F5);border:2px solid rgba(255,107,0,.2);border-radius:11px;padding:12px;margin:13px 0}
-.pbox h3{font-size:.78rem;font-weight:900;color:var(--ink);margin-bottom:8px}
-.prow{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);padding:3px 0;border-bottom:1px dashed rgba(255,107,0,.15)}
-.prow:last-child{border:none;font-weight:900;color:var(--ink);font-size:.9rem}
-.cta-btn{
-  width:100%;padding:14px;border:none;border-radius:13px;
-  background:linear-gradient(135deg,var(--saffron),var(--magenta));
-  color:#fff;font-family:'Fredoka One',cursive;font-size:1.1rem;
-  cursor:pointer;box-shadow:0 8px 24px rgba(212,0,106,.35);
-  transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(212,0,106,.45)}
-.cta-btn:active{transform:scale(.98)}
-.cta-note{text-align:center;font-size:.67rem;color:var(--muted);margin-top:7px}
-
-/* RESULT */
-#resPanel{display:none;padding:16px}
-.ract{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:13px}
-.rbtn{padding:11px 4px;border:none;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.75rem;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .15s}
-.rbtn:hover{transform:translateY(-2px)}
-.rwa{background:#dcfce7;color:#15803d}.rdl{background:#eff6ff;color:#1d4ed8}.rnw{background:#FFF8F0;color:var(--ink)}
-.rbtn .ri{font-size:1.1rem}
-
-/* LOADER */
-.ldr{display:none;position:fixed;inset:0;background:linear-gradient(135deg,rgba(26,10,0,.95),rgba(61,0,48,.95));z-index:400;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#cc{position:fixed;inset:0;pointer-events:none;z-index:1;width:100%;height:100%}
+.rb{height:5px;background:linear-gradient(90deg,var(--sf),var(--gd),var(--mg),#7B1FA2,var(--tl),var(--gd),var(--sf));background-size:200%;animation:rf 3s linear infinite}
+@keyframes rf{to{background-position:200%}}
+.hdr{background:#fff;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--sf),var(--gd),var(--mg),var(--tl)) 1;position:sticky;top:0;z-index:200;padding:9px 14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 14px rgba(212,0,106,.1)}
+.logo{font-family:'Fredoka One',cursive;font-size:1.45rem;background:linear-gradient(135deg,var(--sf),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo span{font-size:.55rem;font-weight:800;color:var(--mt);letter-spacing:1px;text-transform:uppercase;display:block;-webkit-text-fill-color:var(--mt)}
+.hdr-r{display:flex;align-items:center;gap:6px}
+.ytb{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#ff0000,#cc0000);color:#fff;font-size:.7rem;font-weight:900;padding:6px 12px;border-radius:20px;text-decoration:none;animation:yg 2s ease-in-out infinite;white-space:nowrap}
+@keyframes yg{0%,100%{box-shadow:0 2px 10px rgba(204,0,0,.3)}50%{box-shadow:0 2px 18px rgba(204,0,0,.55)}}
+.fpill{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;font-size:.7rem;font-weight:900;padding:6px 12px;border-radius:20px}
+.yts{background:linear-gradient(135deg,#1a0a00,#3d0000);padding:7px 14px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.yts a{display:inline-flex;align-items:center;gap:5px;background:#ff0000;color:#fff;font-size:.74rem;font-weight:900;padding:4px 12px;border-radius:16px;text-decoration:none}
+.hero{background:linear-gradient(160deg,#FFF3E0,#FCE4EC,#F3E5F5,#E0F2F1);background-size:300%;animation:hs 8s ease infinite;padding:30px 18px 24px;text-align:center;position:relative;overflow:hidden}
+@keyframes hs{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hf{position:absolute;font-size:1.3rem;animation:hfl var(--hd,4s) ease-in-out var(--hdl,0s) infinite}
+@keyframes hfl{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-14px) rotate(5deg)}}
+.hero h1{font-family:'Fredoka One',cursive;font-size:clamp(1.7rem,5.5vw,2.8rem);color:var(--ink);line-height:1.1;margin-bottom:6px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--sf),var(--mg),#7B1FA2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--mt);font-size:.85rem;margin-bottom:0}
+.cw{position:relative;width:100px;height:100px;margin:0 auto 18px;animation:cf 3s ease-in-out infinite;perspective:300px}
+@keyframes cf{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+.cp{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:84px;height:9px;background:linear-gradient(135deg,#F5A623,#FF6B00);border-radius:50%}
+.cb{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:66px;height:42px;background:linear-gradient(135deg,#FF6B8A,#D4006A);border-radius:7px 7px 4px 4px;box-shadow:3px 3px 0 rgba(0,0,0,.13)}
+.cb::before{content:'';position:absolute;top:7px;left:0;right:0;height:3px;background:rgba(255,255,255,.4)}
+.ct{position:absolute;bottom:51px;left:50%;transform:translateX(-50%);width:66px;height:28px;background:linear-gradient(135deg,#F5A623,#FF6B00);border-radius:7px 7px 4px 4px}
+.ccm{position:absolute;bottom:79px;left:50%;transform:translateX(-50%);width:75px;height:10px;background:#fff;border-radius:18px}
+.ccn{position:absolute;bottom:89px;left:50%;transform:translateX(-50%);width:7px;height:20px;background:linear-gradient(135deg,#7B1FA2,#D4006A);border-radius:3px}
+.cfl{position:absolute;bottom:109px;left:50%;transform:translateX(-50%);width:9px;height:13px;background:linear-gradient(180deg,#FFF176,#FF6B00,#D4006A);border-radius:50% 50% 40% 40%;animation:fl .5s ease-in-out infinite alternate;box-shadow:0 0 8px #FF6B00}
+@keyframes fl{0%{transform:translateX(-50%) scaleX(1)}100%{transform:translateX(-50%) scaleX(.8) scaleY(1.1)}}
+.catbar{background:#fff;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,var(--sf),var(--mg),var(--tl)) 1;padding:9px 10px;overflow-x:auto;display:flex;gap:6px;scrollbar-width:none;position:sticky;top:50px;z-index:190;box-shadow:0 2px 10px rgba(212,0,106,.07)}
+.catbar::-webkit-scrollbar{display:none}
+.cb2{padding:7px 16px;border-radius:20px;border:2px solid #FFD0B0;background:#FFF8F0;font-family:'Nunito',sans-serif;font-size:.74rem;font-weight:800;color:var(--sf);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.cb2.on{background:linear-gradient(135deg,var(--sf),var(--mg));border-color:transparent;color:#fff;box-shadow:0 2px 10px rgba(212,0,106,.3)}
+.mg{display:grid;grid-template-columns:1fr;gap:16px;padding:16px 12px;position:relative;z-index:2}
+@media(min-width:720px){.mg{grid-template-columns:1fr 1fr;padding:20px 24px}}
+.pnl{background:#fff;border-radius:var(--r);box-shadow:0 3px 18px rgba(212,0,106,.09);padding:16px;border:1px solid rgba(255,107,0,.1)}
+.slbl{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--sf);margin-bottom:7px;display:block}
+.tsc{display:flex;gap:7px;overflow-x:auto;padding:3px 0 7px;scrollbar-width:none}
+.tsc::-webkit-scrollbar{display:none}
+.tth{flex-shrink:0;width:70px;height:46px;border-radius:9px;cursor:pointer;border:2.5px solid transparent;transition:all .16s;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.tth.on{border-color:var(--mg);transform:scale(1.08);box-shadow:0 3px 12px rgba(212,0,106,.3)}
+.tthl{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:.44rem;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);line-height:1.2}
+.lr{display:flex;gap:6px;margin-bottom:11px;flex-wrap:wrap}
+.lb{padding:6px 13px;border:2px solid #FFD0B0;border-radius:9px;background:#FFF8F0;font-family:'Nunito',sans-serif;font-size:.73rem;font-weight:800;color:var(--sf);cursor:pointer;transition:all .15s}
+.lb.on{background:linear-gradient(135deg,var(--sf),var(--mg));border-color:transparent;color:#fff}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.ff{grid-column:1/-1}
+.fi{display:flex;flex-direction:column;gap:3px}
+.fi label{font-size:.6rem;font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.3px}
+.fi input,.fi textarea{padding:8px 10px;border:2px solid #FFD0B0;border-radius:9px;font-family:'Nunito',sans-serif;font-size:.84rem;color:var(--ink);background:#FFF8F0;outline:none;transition:border .15s}
+.fi input:focus,.fi textarea:focus{border-color:var(--mg);background:#fff}
+.fi textarea{resize:vertical;min-height:48px}
+.phz{border:2px dashed #FFD0B0;border-radius:11px;padding:11px;text-align:center;cursor:pointer;background:#FFF8F0;position:relative;margin-bottom:9px}
+.phz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.phz h4{font-size:.75rem;font-weight:800;color:var(--ink)}
+.phz p{font-size:.65rem;color:var(--mt)}
+.ppr{display:none;align-items:center;gap:8px;margin-bottom:9px;background:#FFF8F0;padding:8px 11px;border-radius:10px}
+.ppr img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2.5px solid var(--mg)}
+.prm{font-size:.7rem;color:var(--mg);font-weight:700;cursor:pointer}
+.genbtn{width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--sf),var(--mg));color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;box-shadow:0 6px 20px rgba(212,0,106,.3);transition:all .18s;margin-top:10px}
+.genbtn:active{transform:scale(.97)}
+.ldtxt{text-align:center;font-size:.76rem;color:var(--mt);margin-top:6px;min-height:16px}
+.abtn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.abtn{padding:11px 5px;border:none;border-radius:11px;font-family:'Nunito',sans-serif;font-size:.74rem;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .15s}
+.abtn:active{transform:scale(.96)}
+.adl{background:#eff6ff;color:#1d4ed8}
+.awa{background:#dcfce7;color:#15803d}
+.stage{background:linear-gradient(160deg,#1a0a00,#3d0030,#001a16);border-radius:var(--r);overflow:hidden;padding:14px;display:flex;align-items:center;justify-content:center;min-height:300px;position:relative}
+.stage::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(255,107,0,.14),transparent 55%),radial-gradient(ellipse at 70% 50%,rgba(212,0,106,.11),transparent 55%)}
+.stage::after{content:'◆ ◈ ◆ ◈ ◆';position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:.45rem;color:rgba(245,166,35,.25);letter-spacing:8px}
+.wp{perspective:900px;width:100%;max-width:300px;z-index:2}
+.w3d{position:relative;transform-style:preserve-3d;animation:f3d 4s ease-in-out infinite}
+@keyframes f3d{0%,100%{transform:rotateY(-5deg) rotateX(3deg) translateY(0)}50%{transform:rotateY(5deg) rotateX(-2deg) translateY(-8px)}}
+.wshadow{position:absolute;bottom:-15px;left:10%;right:10%;height:14px;background:rgba(0,0,0,.38);border-radius:50%;filter:blur(7px);animation:sp 4s ease-in-out infinite}
+@keyframes sp{0%,100%{transform:scaleX(1);opacity:.5}50%{transform:scaleX(.82);opacity:.26}}
+.bf{position:absolute;animation:bfl var(--bd,3s) ease-in-out var(--bdl,0s) infinite;pointer-events:none;font-size:1.2rem;z-index:3}
+@keyframes bfl{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-9px) rotate(4deg)}}
+.ii{padding:22px 16px;text-align:center;position:relative}
+.ii::before{content:'◆◈◆◈◆';position:absolute;top:6px;left:0;right:0;text-align:center;font-size:.4rem;letter-spacing:3px;opacity:.2}
+.ii-photo{width:68px;height:68px;border-radius:50%;object-fit:cover;margin:0 auto 9px;display:block;border:3.5px solid rgba(255,255,255,.5);box-shadow:0 3px 12px rgba(0,0,0,.22)}
+.ii-ico{font-size:1.9rem;margin-bottom:5px;display:block;filter:drop-shadow(0 2px 5px rgba(0,0,0,.2))}
+.ii-title{font-family:'Fredoka One',cursive;font-size:1.7rem;line-height:1.1;margin-bottom:3px}
+.ii-sub{font-size:.76rem;font-weight:700;margin-bottom:9px;opacity:.88}
+.ii-div{border:none;height:1px;background:currentColor;opacity:.16;margin:7px 0}
+.ii-dlbl{font-size:.52rem;letter-spacing:2px;text-transform:uppercase;opacity:.55;margin-bottom:2px}
+.ii-dval{font-size:.78rem;font-weight:700}
+.ii-msg{font-size:.7rem;border-radius:8px;padding:6px 9px;margin:7px 0}
+.ii-rl{font-size:.52rem;letter-spacing:2px;text-transform:uppercase;opacity:.55}
+.ii-rv{font-size:.88rem;font-weight:900}
+.ii-cl{font-size:.68rem;font-style:italic;opacity:.62;margin-top:7px}
+.ii-em{font-size:1.1rem;margin-top:5px;letter-spacing:3px}
+.ii-cr{font-size:.52rem;opacity:.4;margin-top:5px}
+.dr{display:flex;justify-content:center;gap:10px;margin-bottom:9px}
+.dw{display:flex;flex-direction:column;align-items:center;gap:3px}
+.dwl{font-size:.5rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;opacity:.65}
+.gal{padding:14px 12px 36px;position:relative;z-index:2}
+.galt{font-family:'Fredoka One',cursive;font-size:1rem;background:linear-gradient(135deg,var(--sf),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:11px;display:flex;align-items:center;gap:5px}
+.gg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:480px){.gg{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:700px){.gg{grid-template-columns:repeat(5,1fr)}}
+.cd{perspective:800px;cursor:pointer}
+.cdi{border-radius:var(--r);overflow:hidden;background:#fff;box-shadow:0 3px 16px rgba(212,0,106,.09);transition:transform .12s ease-out,box-shadow .18s;transform-style:preserve-3d;border:2px solid transparent}
+.cd:hover .cdi{box-shadow:0 12px 40px rgba(212,0,106,.2);border-color:var(--mg)}
+.th2{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;transform-style:preserve-3d}
+.th2::before{content:'◆';position:absolute;top:5px;left:5px;font-size:.55rem;color:rgba(255,255,255,.35)}
+.th2::after{content:'◆';position:absolute;bottom:5px;right:5px;font-size:.55rem;color:rgba(255,255,255,.35)}
+.tico{font-size:2rem;filter:drop-shadow(0 3px 7px rgba(0,0,0,.22));margin-bottom:4px;display:block;transform:translateZ(18px)}
+.tlbl2{font-family:'Fredoka One',cursive;font-size:.74rem;text-align:center;text-shadow:0 2px 4px rgba(0,0,0,.28);transform:translateZ(18px)}
+.tbal{position:absolute;font-size:.85rem;opacity:.65;transform:translateZ(12px)}
+.cdf{padding:6px 9px;background:#fff;display:flex;align-items:center;justify-content:space-between;border-top:2px solid #FFF0F0}
+.cdn{font-size:.68rem;font-weight:800;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80%}
+.cdfr{font-size:.64rem;font-weight:900;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:2px 7px;border-radius:7px}
+.ov{display:none;position:fixed;inset:0;background:rgba(26,10,0,.68);backdrop-filter:blur(6px);z-index:400;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ov.on{display:flex;align-items:flex-start;justify-content:center;padding:10px}
+.mb{background:#fff;border-radius:20px;width:100%;max-width:460px;box-shadow:0 28px 70px rgba(0,0,0,.3);overflow:hidden;margin:auto;animation:su .2s ease}
+@keyframes su{from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mhd{padding:11px 15px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,var(--sf),var(--mg))}
+.mhd h2{font-family:'Fredoka One',cursive;font-size:.95rem;color:#fff}
+.mc{width:26px;height:26px;border-radius:50%;border:none;background:rgba(255,255,255,.2);cursor:pointer;font-size:.8rem;color:#fff}
+.mlink{display:flex;align-items:center;gap:10px;background:#FFF8F0;border:1.5px solid rgba(255,107,0,.13);border-radius:11px;padding:10px;text-decoration:none;margin-bottom:8px;transition:background .16s}
+.mlink:hover{background:#FFF0E8}
+.mlink-i{font-size:1.3rem;flex-shrink:0}
+.mlink strong{display:block;font-size:.8rem;color:var(--ink);font-weight:800}
+.mlink span{font-size:.68rem;color:var(--mt)}
+.mcta{width:100%;margin-top:9px;padding:11px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--sf),var(--mg));color:#fff;font-family:'Fredoka One',cursive;font-size:.92rem;cursor:pointer}
+.foot{text-align:center;padding:20px 14px;color:var(--mt);font-size:.72rem;border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--sf),var(--gd),var(--mg),var(--tl)) 1;background:#fff}
+.eco{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;max-width:440px;margin:12px auto 0}
+@media(min-width:440px){.eco{grid-template-columns:repeat(4,1fr)}}
+.elink{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;background:#FFF8F0;border:1.5px solid #FFD0B0;border-radius:11px;padding:10px 5px;transition:all .16s}
+.elink:hover{background:#FFF0E8;transform:translateY(-2px)}
+.elink-i{font-size:1.2rem}
+.elink strong{font-size:.63rem;font-weight:800;color:var(--ink);text-align:center}
+.elink span{font-size:.56rem;color:var(--mt);text-align:center}
+.foot-ab{padding:0 14px}
+.foot-ab a,.foot-ab button{color:var(--sf);font-weight:700;font-size:.72rem;text-decoration:none;margin:0 8px;background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif}
+.ov{display:none;position:fixed;inset:0;background:rgba(26,10,0,.68);backdrop-filter:blur(6px);z-index:400;overflow-y:auto}
+.ov.on{display:flex;align-items:flex-start;justify-content:center;padding:10px}
+.aov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(5px);z-index:600;align-items:center;justify-content:center;padding:16px}
+.aov.on{display:flex}
+.abox{background:#fff;border-radius:18px;max-width:380px;width:100%;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:su .2s ease}
+.abox h3{font-family:'Fredoka One',cursive;font-size:1.05rem;background:linear-gradient(135deg,var(--sf),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+.abox p{font-size:.78rem;color:var(--mt);line-height:1.6;margin-bottom:8px}
+.abox button{margin-top:10px;width:100%;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--sf),var(--mg));color:#fff;font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer}
+.ldr{display:none;position:fixed;inset:0;background:linear-gradient(135deg,rgba(26,10,0,.96),rgba(61,0,48,.96));z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .ldr.on{display:flex}
-.lspin{width:50px;height:50px;border:4px solid rgba(255,107,0,.2);border-top-color:var(--saffron);border-right-color:var(--magenta);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ldr p{color:#fff;font-weight:800;font-size:.9rem;text-align:center;padding:0 20px}
-.ldr small{color:rgba(255,255,255,.5);font-size:.78rem}
-
-/* TOAST */
-.tst{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);background:linear-gradient(135deg,var(--saffron),var(--magenta));color:#fff;padding:11px 22px;border-radius:30px;font-size:.82rem;font-weight:800;z-index:500;transition:transform .3s;white-space:nowrap;box-shadow:0 8px 24px rgba(212,0,106,.35)}
+.lsp{width:46px;height:46px;border:4px solid rgba(255,107,0,.2);border-top-color:var(--sf);border-right-color:var(--mg);border-radius:50%;animation:sp2 .7s linear infinite}
+@keyframes sp2{to{transform:rotate(360deg)}}
+.ldr p{color:#fff;font-weight:800;font-size:.86rem;text-align:center}
+.tst{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(66px);background:linear-gradient(135deg,var(--sf),var(--mg));color:#fff;padding:10px 20px;border-radius:28px;font-size:.78rem;font-weight:800;z-index:600;transition:transform .28s;white-space:nowrap;box-shadow:0 6px 20px rgba(212,0,106,.3)}
 .tst.on{transform:translateX(-50%) translateY(0)}
-
-/* FOOTER */
-.foot{text-align:center;padding:22px 16px;color:var(--muted);font-size:.75rem;border-top:3px solid transparent;border-image:linear-gradient(90deg,var(--saffron),var(--gold),var(--magenta),var(--teal)) 1;background:#fff}
 </style>
 </head>
 <body>
 
-<!-- CSS CONFETTI RAIN -->
-<div class="confetti-rain" aria-hidden="true">
-  <div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div>
-  <div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div>
-  <div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div><div class="cr"></div>
-</div>
-
-<div class="ldr" id="ldr"><div class="lspin"></div><p id="lmsg">தயாரிக்கிறோம்...</p><small>ஒரு நிமிடம் ✨</small></div>
+<canvas id="cc"></canvas>
+<div class="ldr" id="ldr"><div class="lsp"></div><p id="lmsg">தயாரிக்கிறோம்...</p><small style="color:rgba(255,255,255,.45);font-size:.74rem">ஒரு நிமிடம் ✨</small></div>
 <div class="tst" id="tst"></div>
 
-<!-- MODAL -->
-<div class="overlay" id="overlay">
-<div class="mbox" id="mbox">
-  <div class="mhdr">
-    <h2 id="mTitle">🎨 Customize</h2>
-    <button class="mclose" onclick="closeM()">✕</button>
+<!-- SUCCESS MODAL -->
+<div class="ov" id="sucMod">
+<div class="mb">
+  <div class="mhd"><h2>🎊 Invitation Ready!</h2><button class="mc" onclick="closeM('sucMod')">✕</button></div>
+  <div style="padding:14px">
+    <p style="font-size:.78rem;color:var(--mt);text-align:center;margin-bottom:12px">Downloaded! Explore our free ecosystem 🌟</p>
+    <a class="mlink" href="https://voteme-lovat.vercel.app/" target="_blank"><div class="mlink-i">🗳️</div><div><strong>VoteMe</strong><span>Fun polls & voting games for guests</span></div></a>
+    <a class="mlink" href="https://kaarkalvi.vercel.app/" target="_blank"><div class="mlink-i">🚗</div><div><strong>Kaar Kalvi</strong><span>Tamil car education platform</span></div></a>
+    <a class="mlink" href="http://schooltag.in/" target="_blank"><div class="mlink-i">🏷️</div><div><strong>SchoolTag</strong><span>Custom school name labels</span></div></a>
+    <a class="mlink" href="http://singamstartup.com/" target="_blank"><div class="mlink-i">🦁</div><div><strong>Singam Startup</strong><span>Business blueprint PDFs</span></div></a>
+    <a class="mlink" href="https://www.youtube.com/c/Abidhiyajunction" target="_blank"><div class="mlink-i">⚖️</div><div><strong>Land Law Tamil</strong><span>Property & legal guides</span></div></a>
+    <hr style="border:none;border-top:1px solid #FFD0B0;margin:10px 0"/>
+    <p style="font-size:.72rem;font-weight:800;color:var(--sf);text-align:center;margin-bottom:8px">📤 Share Your Invitation</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="shareBtns"></div>
+    <button class="mcta" style="margin-top:10px" onclick="closeM('sucMod')">✕ Close</button>
   </div>
-  <div class="inv-stage" id="invStage">
-    <div class="inv3d-wrap">
-      <div class="inv3d" id="inv3dAnim">
-        <div class="inv-card-body" id="invCardBody"></div>
-        <div class="inv3d-shadow"></div>
-      </div>
-    </div>
-  </div>
-  <div id="fPanel">
-  <div class="mbody">
-    <div class="ph-zone" id="phZone">
-      <input type="file" accept="image/*" id="phInput" onchange="handlePh(event)">
-      <div class="ph-zone-ico">📸</div>
-      <h4>Birthday Person Photo</h4>
-      <p>Optional — Invitation-ல் சேர்க்கப்படும்</p>
-    </div>
-    <div id="phPrevWrap">
-      <img id="phPrev" src="" alt="">
-      <div><div style="font-size:.8rem;font-weight:700">Photo ready ✅</div>
-      <div class="ph-rm" onclick="rmPh()">✕ Remove</div></div>
-    </div>
-    <span class="sec-lbl">🌐 Language</span>
-    <div class="lrow">
-      <button class="lbtn sel" data-lang="tamil" onclick="setLang(this)">தமிழ்</button>
-      <button class="lbtn" data-lang="english" onclick="setLang(this)">English</button>
-      <button class="lbtn" data-lang="both" onclick="setLang(this)">தமிழ் + Eng</button>
-    </div>
-    <div class="fgrid">
-      <div class="fg ffull"><label>🎂 Birthday Person Name *</label><input type="text" id="fn" placeholder="Dhiya / தியா" oninput="refreshPreview()"></div>
-      <div class="fg"><label>🎈 Age</label><input type="text" id="fa" placeholder="7 / 50th"></div>
-      <div class="fg"><label>📅 Date</label><input type="date" id="fd"></div>
-      <div class="fg"><label>⏰ Time</label><input type="time" id="ft"></div>
-      <div class="fg ffull"><label>📍 Venue</label><input type="text" id="fv" placeholder="42 Gandhi St, Mulanur"></div>
-      <div class="fg"><label>👤 Hosted By</label><input type="text" id="fh" placeholder="Abi & Family"></div>
-      <div class="fg"><label>📞 RSVP</label><input type="tel" id="fr" placeholder="9876543210"></div>
-      <div class="fg ffull"><label>💌 Special Message</label><textarea id="fm" placeholder="Dress code, no gifts..."></textarea></div>
-      <div class="fg ffull"><label>📱 Your WhatsApp *</label><input type="tel" id="fw" placeholder="9876543210"></div>
-    </div>
-    <div class="pbox">
-      <h3>💳 Payment Summary</h3>
-      <div class="prow"><span>3D Birthday Invitation</span><span>₹9</span></div>
-      <div class="prow"><span>Custom Design + Photo</span><span>Free ✅</span></div>
-      <div class="prow"><span>WhatsApp Delivery</span><span>Free ✅</span></div>
-      <div class="prow"><span><b>Total</b></span><span><b>₹9 only</b></span></div>
-    </div>
-    <button class="cta-btn" onclick="generate()">🎉 Pay ₹9 & Get My Invitation</button>
-    <p class="cta-note">🔒 Razorpay Secure &nbsp;|&nbsp; ⚡ 2 நிமிட delivery</p>
-  </div>
-  </div>
-  <div id="resPanel">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-family:'Fredoka One',cursive;font-size:1.05rem;background:linear-gradient(135deg,var(--saffron),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">🎊 Invitation Ready!</div>
-      <span style="background:#dcfce7;color:#15803d;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px">✓ Done</span>
-    </div>
-    <div class="inv-stage" id="resStage" style="border-radius:14px;overflow:hidden;min-height:200px">
-      <div class="inv3d-wrap"><div class="inv3d" id="res3dAnim"><div class="inv-card-body" id="resCardBody"></div><div class="inv3d-shadow"></div></div></div>
-    </div>
-    <div class="ract">
-      <button class="rbtn rwa" onclick="sendWA()"><span class="ri">📱</span>WhatsApp</button>
-      <button class="rbtn rdl" onclick="dlCard()"><span class="ri">⬇️</span>Download</button>
-      <button class="rbtn rnw" onclick="newOrder()"><span class="ri">🔄</span>New</button>
-    </div>
-  </div>
+</div>
+</div>
+
+<!-- ABOUT MODAL -->
+<div class="aov" id="abtMod">
+<div class="abox">
+  <h3>🌟 About InviteZoom</h3>
+  <p>InviteZoom is engineered by <strong>Abi</strong> — a dedicated solopreneur and content creator who harnesses cutting-edge AI to build innovative digital solutions.</p>
+  <p>Built under the <strong>DJ Groups</strong> brand umbrella. 100% free, mobile-first, zero cloud storage — all processing happens on your device.</p>
+  <button onclick="closeM('abtMod')">✕ Close</button>
+</div>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div class="aov" id="prvMod">
+<div class="abox">
+  <h3>🔒 Privacy Policy</h3>
+  <p>Your data never leaves your device. All photos, text, and designs are processed entirely in your browser's memory.</p>
+  <p>No cloud uploads. No tracking. No data warehousing. InviteZoom is 100% privacy-first by architecture.</p>
+  <p>Contact: <a href="mailto:ideozoomacademy@gmail.com" style="color:var(--sf);font-weight:700">ideozoomacademy@gmail.com</a></p>
+  <button onclick="closeM('prvMod')">✕ Close</button>
 </div>
 </div>
 
 <!-- PAGE -->
-<div class="rangoli-border"></div>
+<div class="rb"></div>
 <header class="hdr">
-  <div class="logo">🎂 InviteZoom<span class="logo-sub">3D Invitations</span></div>
-  <div class="hdr-right">
-    <a href="feedback.html" style="display:flex;align-items:center;gap:4px;font-size:.72rem;font-weight:900;color:var(--saffron);background:#FFF3E0;padding:7px 11px;border-radius:18px;border:2px solid #FFD0B0;text-decoration:none;white-space:nowrap">⭐ Reviews</a>
-    <a class="yt-btn" href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener">
-      <svg width="14" height="10" viewBox="0 0 16 12" fill="white"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
+  <div class="logo">🎂 InviteZoom<span>3D Invitations · Free Forever</span></div>
+  <div class="hdr-r">
+    <a class="ytb" href="https://www.youtube.com/channel/UCrS9OYnk74wOavMHr04zLVA" target="_blank" rel="noopener">
+      <svg width="13" height="10" viewBox="0 0 16 12" fill="white"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
       Bday Zone
     </a>
-    <div class="price-pill">Only ₹9</div>
+    <div class="fpill">FREE</div>
   </div>
 </header>
 
-<div class="yt-strip">
-  <span class="yt-strip-txt">🎬 Birthday videos on</span>
-  <a class="yt-strip-btn" href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener">
-    <svg width="13" height="10" viewBox="0 0 16 12" fill="white"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
-    Bday Zone
-  </a>
-  <span class="yt-strip-sub">Subscribe! 🔔</span>
+<div class="yts">
+  <span style="font-size:.76rem;color:rgba(255,255,255,.65)">🎬 Birthday videos on</span>
+  <a href="https://www.youtube.com/channel/UCrS9OYnk74wOavMHr04zLVA" target="_blank">▶ Bday Zone</a>
+  <span style="font-size:.7rem;color:rgba(255,255,255,.45)">Subscribe 🔔</span>
 </div>
 
-<!-- HERO -->
 <section class="hero">
-  <!-- floating emojis -->
-  <span class="hero-float" style="top:10%;left:5%;--hd:3.5s;--hdelay:0s">🎈</span>
-  <span class="hero-float" style="top:15%;right:6%;--hd:4s;--hdelay:.5s">🎉</span>
-  <span class="hero-float" style="bottom:12%;left:8%;--hd:3s;--hdelay:1s">✨</span>
-  <span class="hero-float" style="bottom:18%;right:5%;--hd:4.5s;--hdelay:.3s">🎊</span>
-
-  <!-- CSS 3D CAKE -->
-  <div class="cake-wrap">
-    <div class="cake-flame"></div>
-    <div class="cake-candle"></div>
-    <div class="cake-cream"></div>
-    <div class="cake-top"></div>
-    <div class="cake-body">
-      <div class="cake-dots">
-        <div class="cake-dot"></div><div class="cake-dot"></div><div class="cake-dot"></div>
-      </div>
-    </div>
-    <div class="cake-plate"></div>
+  <span class="hf" style="top:10%;left:5%;--hd:3.5s;--hdl:0s">🎈</span>
+  <span class="hf" style="top:14%;right:6%;--hd:4s;--hdl:.5s">🎉</span>
+  <span class="hf" style="bottom:10%;left:7%;--hd:3s;--hdl:1s">✨</span>
+  <span class="hf" style="bottom:15%;right:5%;--hd:4.5s;--hdl:.3s">🎊</span>
+  <div class="cw">
+    <div class="cfl"></div><div class="ccn"></div><div class="ccm"></div>
+    <div class="ct"></div><div class="cb"></div><div class="cp"></div>
   </div>
-
-  <h1>3D Birthday<br><em>Invitations!</em></h1>
-  <p class="hero-sub">Template தேர்ந்தெடுங்க • Photo add பண்ணுங்க • ₹9-ல் WhatsApp-ல் பெறுங்க!</p>
-  <div class="steps-row">
-    <div class="schip"><div class="n">1</div>Pick</div><span class="sarr">›</span>
-    <div class="schip"><div class="n">2</div>Customize</div><span class="sarr">›</span>
-    <div class="schip"><div class="n">3</div>Pay ₹9</div><span class="sarr">›</span>
-    <div class="schip"><div class="n">4</div>WhatsApp 📱</div>
-  </div>
+  <h1>Free 3D<br><em>Invitations!</em></h1>
+  <p>30 Themes · Photo Upload · Video Invite · Zero Payment</p>
 </section>
+<div class="rb"></div>
 
-<div class="rangoli-border"></div>
-
-<nav class="fbar">
-  <button class="fchip on" onclick="filterCat('all',this)">✨ All</button>
-  <button class="fchip" onclick="filterCat('kids',this)">👶 Kids</button>
-  <button class="fchip" onclick="filterCat('teen',this)">🎮 Teen</button>
-  <button class="fchip" onclick="filterCat('adult',this)">🥂 Adult</button>
-  <button class="fchip" onclick="filterCat('milestone',this)">🏆 Milestone</button>
-  <button class="fchip" onclick="filterCat('seasonal',this)">🌸 Seasonal</button>
-  <button class="fchip" onclick="filterCat('unique',this)">🎭 Unique</button>
+<nav class="catbar">
+  <button class="cb2 on" data-c="birthday" onclick="swCat('birthday',this)">🎈 Birthday</button>
+  <button class="cb2" data-c="wedding" onclick="swCat('wedding',this)">💍 Wedding</button>
+  <button class="cb2" data-c="housewarm" onclick="swCat('housewarm',this)">🏡 House Warming</button>
 </nav>
 
-<section class="gallery">
-  <div class="gtitle" id="gtitle">✨ All Templates</div>
-  <div class="ggrid" id="ggrid"></div>
+<div class="mg">
+  <!-- FORM PANEL -->
+  <div class="pnl">
+    <span class="slbl">🌐 Language</span>
+    <div class="lr">
+      <button class="lb on" data-l="tamil" onclick="setL(this)">தமிழ்</button>
+      <button class="lb" data-l="english" onclick="setL(this)">English</button>
+      <button class="lb" data-l="both" onclick="setL(this)">தமிழ் + Eng</button>
+    </div>
+    <span class="slbl">🎨 Theme</span>
+    <div class="tsc" id="tsc"></div>
+    <span class="slbl" style="margin-top:11px">✏️ Your Details</span>
+    <div id="dynF"></div>
+    <button class="genbtn" onclick="gen()">🎉 Generate Free 3D Invitation</button>
+    <div class="ldtxt" id="ldtxt"></div>
+    <div class="abtn-row" id="abtnRow" style="display:none">
+      <button class="abtn adl" onclick="dlCard()"><span style="font-size:1rem">⬇️</span>Download Image</button>
+      <button class="abtn awa" onclick="sendWA()"><span style="font-size:1rem">📲</span>WhatsApp</button>
+      <button class="abtn" style="background:#f3e8ff;color:#7c3aed;grid-column:1/-1" onclick="dlVideo()" id="vidBtn"><span style="font-size:1rem">🎬</span><span id="vidBtnTxt">Download Video Invite</span></button>
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span class="slbl" style="margin-bottom:0">👁️ Live Preview</span>
+      <div style="display:flex;background:#f3f4f6;border-radius:20px;padding:3px;gap:2px" id="modeToggle">
+        <button onclick="setMode('image')" id="modeImg" style="padding:5px 13px;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--sf),var(--mg));color:#fff;transition:all .2s">🖼️ Image</button>
+        <button onclick="setMode('video')" id="modeVid" style="padding:5px 13px;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-size:.7rem;font-weight:800;cursor:pointer;background:transparent;color:var(--mt);transition:all .2s">🎬 Video</button>
+      </div>
+    </div>
+    <div class="stage" id="stage" style="position:relative;min-height:300px">
+      <div class="wp" id="imgMode">
+        <div class="w3d" id="w3d">
+          <div id="icb" style="border-radius:16px;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,.52)">
+            <div style="padding:38px 18px;text-align:center;background:linear-gradient(160deg,#1a0a00,#3d0030);color:rgba(255,255,255,.3);font-size:.82rem">
+              <div style="font-size:1.9rem;margin-bottom:9px">🎴</div>
+              Fill details &<br/><strong style="color:rgba(255,255,255,.55)">Generate Invitation</strong>
+            </div>
+          </div>
+          <div class="wshadow"></div>
+        </div>
+      </div>
+      <div id="vidMode" style="display:none;width:100%;height:100%;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center">
+        <canvas id="vidPreviewCanvas" style="border-radius:16px;max-width:100%;box-shadow:0 18px 55px rgba(0,0,0,.6)"></canvas>
+        <div style="margin-top:10px;font-size:.72rem;color:rgba(255,255,255,.5);text-align:center">🎬 Live animated preview</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<section class="gal">
+  <div class="galt" id="galt">✨ Birthday Templates (10)</div>
+  <div class="gg" id="gg"></div>
 </section>
 
-<div class="rangoli-border"></div>
+<!-- NEWSLETTER -->
+<section style="max-width:560px;margin:0 auto;padding:22px 14px 0;position:relative;z-index:2">
+  <div style="background:#fff;border-radius:var(--r);border:1.5px solid rgba(255,107,0,.15);box-shadow:0 3px 18px rgba(212,0,106,.08);padding:20px;text-align:center">
+    <div style="font-size:1.5rem;margin-bottom:6px">📬</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:1.05rem;background:linear-gradient(135deg,var(--sf),var(--mg));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px">Join InviteZoom Newsletter</div>
+    <p style="font-size:.76rem;color:var(--mt);margin-bottom:14px;line-height:1.5">Get new themes, design tips & free invitation ideas straight to your inbox!</p>
+    <div style="display:flex;gap:8px;max-width:380px;margin:0 auto">
+      <input type="email" id="nlEmail" placeholder="Your email address" style="flex:1;padding:9px 12px;border:2px solid #FFD0B0;border-radius:10px;font-family:'Nunito',sans-serif;font-size:.84rem;color:var(--ink);background:#FFF8F0;outline:none;transition:border .15s" onfocus="this.style.borderColor='var(--mg)'" onblur="this.style.borderColor='#FFD0B0'"/>
+      <button onclick="subNews()" id="nlBtn" style="padding:9px 16px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--sf),var(--mg));color:#fff;font-family:'Fredoka One',cursive;font-size:.9rem;cursor:pointer;white-space:nowrap;transition:transform .15s" onmousedown="this.style.transform='scale(.96)'" onmouseup="this.style.transform='scale(1)'">Subscribe ✉️</button>
+    </div>
+    <p style="font-size:.62rem;color:var(--mt);margin-top:8px">🔒 No spam. Unsubscribe anytime.</p>
+  </div>
+</section>
+<div class="rb" style="margin-top:20px"></div>
+
+<!-- FOOTER -->
 <footer class="foot">
-  <p>🔒 Secure &nbsp;|&nbsp; 📱 WhatsApp &nbsp;|&nbsp; 🌐 Tamil & English &nbsp;|&nbsp; ✨ 3D Design</p>
-  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #FFD0B0">
-    <a href="https://www.youtube.com/@Nostalgic2106" target="_blank" rel="noopener"
-       style="display:inline-flex;align-items:center;gap:5px;color:#cc0000;font-weight:800;font-size:.78rem;text-decoration:none;margin-bottom:5px">
-      <svg width="13" height="10" viewBox="0 0 16 12" fill="#cc0000"><path d="M15.7 1.9S15.5.8 15 .3C14.4-.3 13.7-.3 13.4-.3 11.2-.5 8-.5 8-.5s-3.2 0-5.4.2C2.3-.3 1.6-.3 1 .3.5.8.3 1.9.3 1.9S.1 3.2.1 4.5v1.2c0 1.3.2 2.6.2 2.6s.2 1.1.7 1.6c.6.6 1.4.6 1.8.7C4 10.7 8 10.7 8 10.7s3.2 0 5.4-.2c.3 0 1-.1 1.6-.7.5-.5.7-1.6.7-1.6s.2-1.3.2-2.6V4.5C15.9 3.2 15.7 1.9 15.7 1.9zM6.3 7.5V3l4.3 2.3L6.3 7.5z"/></svg>
-      youtube.com/@Nostalgic2106
-    </a>
-    <p style="font-size:.72rem;color:var(--muted)">© 2025 DJ Groups. All Rights Reserved.</p>
+  <p>🆓 100% Free &nbsp;|&nbsp; 📱 WhatsApp &nbsp;|&nbsp; 🌐 Tamil & English &nbsp;|&nbsp; ✨ 3D Design</p>
+  <div class="eco">
+    <a class="elink" href="http://schooltag.in/" target="_blank"><div class="elink-i">🏷️</div><strong>SchoolTag</strong><span>Labels</span></a>
+    <a class="elink" href="http://singamstartup.com/" target="_blank"><div class="elink-i">🦁</div><strong>Singam Startup</strong><span>Blueprints</span></a>
+    <a class="elink" href="https://www.youtube.com/c/Abidhiyajunction" target="_blank"><div class="elink-i">⚖️</div><strong>Land Law Tamil</strong><span>Legal</span></a>
+    <a class="elink" href="https://www.youtube.com/channel/UCrS9OYnk74wOavMHr04zLVA" target="_blank"><div class="elink-i">🎓</div><strong>IdeaZoom</strong><span>Academy</span></a>
+  </div>
+  <div style="margin-top:14px;padding-top:10px;border-top:1px solid #FFD0B0">
+    <p style="font-size:.68rem;font-weight:800;color:var(--sf);margin-bottom:9px">📤 Share InviteZoom</p>
+    <div style="display:flex;justify-content:center;gap:9px;flex-wrap:wrap" id="footShareBtns"></div>
+  </div>
+  <div style="margin-top:14px;padding-top:10px;border-top:1px solid #FFD0B0" class="foot-ab">
+    <button onclick="openM('abtMod')">About Us</button>
+    <button onclick="openM('prvMod')">Privacy Policy</button>
+    <a href="mailto:ideozoomacademy@gmail.com">Contact</a>
+    <p style="margin-top:8px;font-size:.68rem;color:var(--mt)">© 2026 DJ Groups · InviteZoom. All Rights Reserved.</p>
   </div>
 </footer>
 
 <script>
-const T=[
-  {id:'princess', cat:'kids',lbl:'Princess Magic',ico:'👸',bg:'linear-gradient(160deg,#fdf4ff,#fce7f3)',tc:'#7e22ce',sc:'#a855f7',bal:['🎀','💜','🌸'],conf:['✨','🌟','💫'],border:'3px solid #e879f9'},
-  {id:'superhero',cat:'kids',lbl:'Superhero',ico:'🦸',bg:'linear-gradient(160deg,#1e3a8a,#312e81)',tc:'#fbbf24',sc:'#93c5fd',bal:['⚡','💥','🌟'],conf:['⭐','💥','✨'],border:'3px solid #fbbf24'},
-  {id:'dinosaur', cat:'kids',lbl:'Dino Party',ico:'🦕',bg:'linear-gradient(160deg,#14532d,#166534)',tc:'#fbbf24',sc:'#86efac',bal:['🦕','🌿','🥚'],conf:['🌿','⭐','✨'],border:'3px solid #4ade80'},
-  {id:'unicorn',  cat:'kids',lbl:'Unicorn Dream',ico:'🦄',bg:'linear-gradient(160deg,#fce7f3,#ede9fe)',tc:'#7c3aed',sc:'#c4b5fd',bal:['🦄','🌈','⭐'],conf:['✨','🌟','💫'],border:'3px solid #c4b5fd'},
-  {id:'space',    cat:'kids',lbl:'Space Adventure',ico:'🚀',bg:'linear-gradient(160deg,#0f172a,#1e1b4b)',tc:'#7dd3fc',sc:'#bae6fd',bal:['🚀','⭐','🪐'],conf:['⭐','✨','🌟'],border:'1px solid #7dd3fc'},
-  {id:'safari',   cat:'kids',lbl:'Safari Wild',ico:'🦁',bg:'linear-gradient(160deg,#92400e,#b45309)',tc:'#fef3c7',sc:'#fbbf24',bal:['🦁','🐘','🌴'],conf:['🌿','⭐','🌟'],border:'3px solid #fbbf24'},
-  {id:'rainbow',  cat:'kids',lbl:'Rainbow Party',ico:'🌈',bg:'linear-gradient(160deg,#fef3c7,#fce7f3)',tc:'#7c3aed',sc:'#a855f7',bal:['🌈','☁️','⭐'],conf:['🎊','🎉','✨'],border:'3px solid #a855f7'},
-  {id:'mermaid',  cat:'kids',lbl:'Under the Sea',ico:'🧜',bg:'linear-gradient(160deg,#164e63,#0c4a6e)',tc:'#67e8f9',sc:'#a5f3fc',bal:['🧜','🐠','🌊'],conf:['💧','✨','🌟'],border:'2px solid #67e8f9'},
-  {id:'music',    cat:'teen',lbl:'Music Fest',ico:'🎵',bg:'linear-gradient(160deg,#18181b,#3b0764)',tc:'#e879f9',sc:'#f0abfc',bal:['🎵','🎤','🎸'],conf:['🎵','✨','⭐'],border:'1px solid #a855f7'},
-  {id:'gaming',   cat:'teen',lbl:'Gaming Zone',ico:'🎮',bg:'linear-gradient(160deg,#052e16,#14532d)',tc:'#4ade80',sc:'#86efac',bal:['🎮','⚔️','🏆'],conf:['⭐','✨','🌟'],border:'1px solid #22c55e'},
-  {id:'neon',     cat:'teen',lbl:'Neon Glow',ico:'💡',bg:'linear-gradient(160deg,#09090b,#0c0c2b)',tc:'#a855f7',sc:'#06b6d4',bal:['💡','⚡','🌟'],conf:['✨','💫','⭐'],border:'1px solid #a855f7'},
-  {id:'sports',   cat:'teen',lbl:'Sports Champ',ico:'⚽',bg:'linear-gradient(160deg,#1e3a8a,#1d4ed8)',tc:'#fbbf24',sc:'#fde68a',bal:['⚽','🏆','🥇'],conf:['🏆','⭐','✨'],border:'2px solid #fbbf24'},
-  {id:'elegant',  cat:'adult',lbl:'Black Elegance',ico:'🥂',bg:'linear-gradient(160deg,#0a0a0a,#1c1c1c)',tc:'#fbbf24',sc:'#fde68a',bal:['✨','🍾','👑'],conf:['✨','⭐','💫'],border:'1px solid rgba(251,191,36,.5)'},
-  {id:'tropical', cat:'adult',lbl:'Tropical Fiesta',ico:'🌴',bg:'linear-gradient(160deg,#064e3b,#065f46)',tc:'#6ee7b7',sc:'#a7f3d0',bal:['🌴','🍹','🌺'],conf:['🌺','✨','🌿'],border:'2px solid #34d399'},
-  {id:'floral',   cat:'adult',lbl:'Floral Garden',ico:'🌸',bg:'linear-gradient(160deg,#fdf2f8,#fff1f2)',tc:'#be185d',sc:'#f9a8d4',bal:['🌸','🌺','🌷'],conf:['🌸','✨','🌺'],border:'2px solid #f9a8d4'},
-  {id:'golden',   cat:'milestone',lbl:'Golden 50th',ico:'🥇',bg:'linear-gradient(160deg,#451a03,#78350f)',tc:'#fef3c7',sc:'#fbbf24',bal:['🥇','✨','🍾'],conf:['✨','⭐','💫'],border:'2px solid #fbbf24'},
-  {id:'sweet16',  cat:'milestone',lbl:'Sweet 16',ico:'👑',bg:'linear-gradient(160deg,#fdf4ff,#fce7f3)',tc:'#9333ea',sc:'#c084fc',bal:['👑','🌟','🎀'],conf:['✨','🌟','💫'],border:'3px solid #e879f9'},
-  {id:'diamond60',cat:'milestone',lbl:'Diamond 60th',ico:'💎',bg:'linear-gradient(160deg,#0c4a6e,#1e3a8a)',tc:'#bae6fd',sc:'#7dd3fc',bal:['💎','⭐','🌟'],conf:['💎','✨','⭐'],border:'1px solid #7dd3fc'},
-  {id:'winter',   cat:'seasonal',lbl:'Winter Wonder',ico:'❄️',bg:'linear-gradient(160deg,#0c4a6e,#312e81)',tc:'#bae6fd',sc:'#a5f3fc',bal:['❄️','⛄','🌨️'],conf:['❄️','✨','⭐'],border:'1px solid #7dd3fc'},
-  {id:'spring',   cat:'seasonal',lbl:'Spring Garden',ico:'🌺',bg:'linear-gradient(160deg,#f0fdf4,#fdf2f8)',tc:'#166534',sc:'#86efac',bal:['🌺','🦋','🌿'],conf:['🌸','✨','🌺'],border:'2px solid #86efac'},
-  {id:'summer',   cat:'seasonal',lbl:'Summer Beach',ico:'☀️',bg:'linear-gradient(160deg,#0ea5e9,#0369a1)',tc:'#fef3c7',sc:'#fbbf24',bal:['☀️','🏖️','🌊'],conf:['☀️','✨','🌊'],border:'2px solid #fbbf24'},
-  {id:'masquerade',cat:'unique',lbl:'Masquerade Ball',ico:'🎭',bg:'linear-gradient(160deg,#2d0066,#1a0033)',tc:'#fbbf24',sc:'#fde68a',bal:['🎭','✨','🌟'],conf:['✨','💫','⭐'],border:'1px solid rgba(251,191,36,.5)'},
-  {id:'confetti', cat:'unique',lbl:'Confetti Party',ico:'🎊',bg:'linear-gradient(160deg,#fefce8,#fdf4ff)',tc:'#7c3aed',sc:'#a855f7',bal:['🎊','🎉','🎈'],conf:['🎊','🎉','✨'],border:'2px solid #a855f7'},
-];
-
-let cur=null,lang='tamil',photo=null;
-
-function renderGallery(cat){
-  const list=cat==='all'?T:T.filter(t=>t.cat===cat);
-  document.getElementById('ggrid').innerHTML=list.map(t=>`
-    <div class="card3d" onclick="openM('${t.id}')">
-      <div class="card3d-inner">
-        <div class="thumb" style="background:${t.bg}">
-          <span class="th-icon">${t.ico}</span>
-          <div class="th-lbl" style="color:${t.tc}">${t.lbl}</div>
-          ${t.bal.map((b,i)=>`<span class="th-bal" style="top:${[8,55,78][i]}%;${i%2?'right':'left'}:${[8,74,42][i]}%">${b}</span>`).join('')}
-        </div>
-        <div class="card-foot">
-          <span class="card-name">${t.lbl}</span>
-          <span class="card-price">₹9</span>
-        </div>
-      </div>
-    </div>`).join('');
-  attachTilt();
+// ═══════════════ CONFETTI ENGINE ═══════════════
+const cc=document.getElementById('cc'),cx=cc.getContext('2d');
+let pts=[];
+const PC=['#FF6B00','#D4006A','#F5A623','#00897B','#7B1FA2','#fbbf24','#60a5fa','#34d399','#f472b6','#a78bfa'];
+const PS=['r','c','t'];
+function rsz(){cc.width=window.innerWidth;cc.height=window.innerHeight}
+rsz();window.addEventListener('resize',rsz);
+function mkp(){return{x:Math.random()*cc.width,y:-15,w:5+Math.random()*5,h:4+Math.random()*5,col:PC[0|Math.random()*PC.length],sh:PS[0|Math.random()*PS.length],vx:(Math.random()-.5)*2.2,vy:1.4+Math.random()*2.2,rot:Math.random()*360,rv:(Math.random()-.5)*4.5,op:1,lf:0}}
+for(let i=0;i<70;i++){const p=mkp();p.y=Math.random()*window.innerHeight;p.lf=Math.random()*200;pts.push(p)}
+function drawP(p){
+  cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot*Math.PI/180);cx.globalAlpha=p.op;cx.fillStyle=p.col;
+  if(p.sh==='r')cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+  else if(p.sh==='c'){cx.beginPath();cx.arc(0,0,p.w/2,0,Math.PI*2);cx.fill()}
+  else{cx.beginPath();cx.moveTo(0,-p.h/2);cx.lineTo(p.w/2,p.h/2);cx.lineTo(-p.w/2,p.h/2);cx.closePath();cx.fill()}
+  cx.restore()
 }
+function anim(){
+  cx.clearRect(0,0,cc.width,cc.height);
+  pts.forEach((p,i)=>{
+    p.x+=p.vx+Math.sin(p.lf*.03)*.4;p.y+=p.vy;p.rot+=p.rv;p.lf++;
+    if(p.lf>180)p.op=Math.max(0,1-(p.lf-180)/35);
+    if(p.y>cc.height+15||p.op<=0)pts[i]=mkp();
+    drawP(p)
+  });
+  requestAnimationFrame(anim)
+}
+anim();
 
-function filterCat(cat,btn){
-  document.querySelectorAll('.fchip').forEach(b=>b.classList.remove('on'));
+// ═══════════════ 30 THEMES ═══════════════
+const TM={
+  birthday:[
+    {id:'neon',    lbl:'Neon Party',    ico:'🎆',bg:'linear-gradient(160deg,#09090b,#0c0c2b)',  tc:'#e879f9',sc:'#a855f7',bal:['🎆','💜','✨'],grd:'#3b0764,#7c3aed',bdr:'1px solid #a855f7'},
+    {id:'pastel',  lbl:'Pastel Balloon',ico:'🎈',bg:'linear-gradient(160deg,#fdf4ff,#fce7f3)',  tc:'#be185d',sc:'#f9a8d4',bal:['🎈','🌸','🎀'],grd:'#fce7f3,#fdf4ff',bdr:'2px solid #f9a8d4'},
+    {id:'hero',    lbl:'Superhero',     ico:'🦸',bg:'linear-gradient(160deg,#1e3a8a,#312e81)',  tc:'#fbbf24',sc:'#93c5fd',bal:['⚡','💥','🌟'],grd:'#1e3a8a,#1d4ed8',bdr:'2px solid #fbbf24'},
+    {id:'princess',lbl:'Princess Pink', ico:'👸',bg:'linear-gradient(160deg,#fdf4ff,#fce7f3)',  tc:'#7e22ce',sc:'#c084fc',bal:['👸','💜','🌸'],grd:'#f0abfc,#e879f9',bdr:'3px solid #e879f9'},
+    {id:'space',   lbl:'Space Explorer',ico:'🚀',bg:'linear-gradient(160deg,#0f172a,#1e1b4b)',  tc:'#7dd3fc',sc:'#bae6fd',bal:['🚀','⭐','🪐'],grd:'#0f172a,#312e81',bdr:'1px solid #7dd3fc'},
+    {id:'retro',   lbl:'Retro 90s',     ico:'📼',bg:'linear-gradient(160deg,#431407,#7c2d12)',  tc:'#fde68a',sc:'#fbbf24',bal:['📼','🕹️','🌈'],grd:'#7c2d12,#dc2626',bdr:'2px solid #fde68a'},
+    {id:'safari',  lbl:'Jungle Safari', ico:'🦁',bg:'linear-gradient(160deg,#14532d,#166534)',  tc:'#fef9c3',sc:'#86efac',bal:['🦁','🐘','🌴'],grd:'#14532d,#15803d',bdr:'2px solid #4ade80'},
+    {id:'gold',    lbl:'Minimal Gold',  ico:'🥇',bg:'linear-gradient(160deg,#1c1c1c,#292524)',  tc:'#fbbf24',sc:'#fde68a',bal:['🥇','✨','🍾'],grd:'#292524,#44403c',bdr:'1px solid rgba(251,191,36,.5)'},
+    {id:'comic',   lbl:'Comic Pop',     ico:'💥',bg:'linear-gradient(160deg,#fef9c3,#fde68a)',  tc:'#dc2626',sc:'#f97316',bal:['💥','⭐','🎊'],grd:'#fef9c3,#fde68a',bdr:'3px solid #dc2626'},
+    {id:'magic',   lbl:'Magical',       ico:'🌈',bg:'linear-gradient(160deg,#ede9fe,#fce7f3)',  tc:'#7c3aed',sc:'#c4b5fd',bal:['🌈','🦋','✨'],grd:'#c4b5fd,#f0abfc',bdr:'2px solid #a78bfa'},
+  ],
+  wedding:[
+    {id:'maroon',  lbl:'Royal Maroon',  ico:'👑',bg:'linear-gradient(160deg,#4a0932,#1a0536)',  tc:'#fde68a',sc:'#fbbf24',bal:['👑','🌹','✨'],grd:'#4a0932,#7e1d5f',bdr:'2px solid #fbbf24'},
+    {id:'wgold',   lbl:'Golden Luxury', ico:'💎',bg:'linear-gradient(160deg,#451a03,#78350f)',  tc:'#fef3c7',sc:'#fbbf24',bal:['💎','🌟','🍾'],grd:'#78350f,#92400e',bdr:'2px solid #fbbf24'},
+    {id:'temple',  lbl:'Temple Heritage',ico:'🛕',bg:'linear-gradient(160deg,#7c2d12,#92400e)', tc:'#fef9c3',sc:'#fde68a',bal:['🛕','🪔','🌸'],grd:'#7c2d12,#c2410c',bdr:'2px solid #fde68a'},
+    {id:'mughal',  lbl:'Mughal Emerald',ico:'🕌',bg:'linear-gradient(160deg,#064e3b,#065f46)',  tc:'#d1fae5',sc:'#6ee7b7',bal:['🕌','💚','🌿'],grd:'#064e3b,#047857',bdr:'2px solid #34d399'},
+    {id:'floral',  lbl:'Pastel Floral', ico:'🌸',bg:'linear-gradient(160deg,#fdf2f8,#fff1f2)',  tc:'#be185d',sc:'#fda4af',bal:['🌸','🌷','🦋'],grd:'#fdf2f8,#fce7f3',bdr:'2px solid #f9a8d4'},
+    {id:'pearl',   lbl:'White Pearl',   ico:'🤍',bg:'linear-gradient(160deg,#f8fafc,#f1f5f9)',  tc:'#475569',sc:'#94a3b8',bal:['🤍','💐','✨'],grd:'#f1f5f9,#e2e8f0',bdr:'2px solid #cbd5e1'},
+    {id:'indow',   lbl:'Indo-Western',  ico:'🥻',bg:'linear-gradient(160deg,#1e1b4b,#312e81)',  tc:'#fde68a',sc:'#c4b5fd',bal:['🥻','✨','🌟'],grd:'#1e1b4b,#4338ca',bdr:'2px solid #a78bfa'},
+    {id:'vintrose',lbl:'Vintage Rose',  ico:'🌹',bg:'linear-gradient(160deg,#450a0a,#7f1d1d)',  tc:'#fecaca',sc:'#fca5a5',bal:['🌹','💌','✨'],grd:'#7f1d1d,#991b1b',bdr:'2px solid #fca5a5'},
+    {id:'script',  lbl:'Modern Script', ico:'✍️',bg:'linear-gradient(160deg,#0f0f0f,#1c1917)',  tc:'#e7e5e4',sc:'#a8a29e',bal:['✍️','💍','🌿'],grd:'#1c1917,#292524',bdr:'1px solid #78716c'},
+    {id:'botanic', lbl:'Botanical',     ico:'🌿',bg:'linear-gradient(160deg,#f0fdf4,#dcfce7)',  tc:'#14532d',sc:'#16a34a',bal:['🌿','🌱','🍃'],grd:'#dcfce7,#bbf7d0',bdr:'2px solid #86efac'},
+  ],
+  housewarm:[
+    {id:'mango',   lbl:'Mango Leaf',    ico:'🌿',bg:'linear-gradient(160deg,#14532d,#15803d)',  tc:'#fef9c3',sc:'#fde68a',bal:['🌿','🌾','🌻'],grd:'#14532d,#166534',bdr:'2px solid #fde68a'},
+    {id:'banana',  lbl:'Banana Leaf',   ico:'🍌',bg:'linear-gradient(160deg,#365314,#3f6212)',  tc:'#ecfccb',sc:'#bef264',bal:['🍌','🌿','🌺'],grd:'#365314,#4d7c0f',bdr:'2px solid #a3e635'},
+    {id:'modiso',  lbl:'Modern ISO',    ico:'🏠',bg:'linear-gradient(160deg,#0f172a,#1e293b)',  tc:'#7dd3fc',sc:'#38bdf8',bal:['🏠','✨','🌟'],grd:'#0f172a,#1e3a8a',bdr:'1px solid #38bdf8'},
+    {id:'nordic',  lbl:'Nordic Minimal',ico:'❄️',bg:'linear-gradient(160deg,#f8fafc,#f1f5f9)',  tc:'#1e293b',sc:'#64748b',bal:['❄️','🏔️','🌲'],grd:'#f1f5f9,#e2e8f0',bdr:'2px solid #94a3b8'},
+    {id:'terra',   lbl:'Terracotta',    ico:'🏺',bg:'linear-gradient(160deg,#7c2d12,#9a3412)',  tc:'#fef3c7',sc:'#fde68a',bal:['🏺','🌻','🌿'],grd:'#7c2d12,#c2410c',bdr:'2px solid #fb923c'},
+    {id:'hgold',   lbl:'Golden Thresh.',ico:'🪔',bg:'linear-gradient(160deg,#451a03,#78350f)',  tc:'#fef9c3',sc:'#fbbf24',bal:['🪔','🌟','✨'],grd:'#78350f,#92400e',bdr:'2px solid #fbbf24'},
+    {id:'mandala', lbl:'Divine Mandala',ico:'☸️',bg:'linear-gradient(160deg,#4a0932,#6d1a4a)',  tc:'#fde68a',sc:'#fbbf24',bal:['☸️','🕉️','🌸'],grd:'#4a0932,#7e1d5f',bdr:'2px solid #fbbf24'},
+    {id:'pbrick',  lbl:'Pastel Brick',  ico:'🧱',bg:'linear-gradient(160deg,#fef3c7,#ffedd5)',  tc:'#92400e',sc:'#b45309',bal:['🧱','🌸','🏡'],grd:'#fef3c7,#fde68a',bdr:'2px solid #fb923c'},
+    {id:'eco',     lbl:'Eco Green',     ico:'♻️',bg:'linear-gradient(160deg,#ecfdf5,#d1fae5)',  tc:'#065f46',sc:'#059669',bal:['♻️','🌱','🍃'],grd:'#d1fae5,#a7f3d0',bdr:'2px solid #34d399'},
+    {id:'classic', lbl:'Classic Art',   ico:'🏛️',bg:'linear-gradient(160deg,#fafaf9,#f5f5f4)',  tc:'#1c1917',sc:'#78716c',bal:['🏛️','📐','✏️'],grd:'#f5f5f4,#e7e5e4',bdr:'2px solid #a8a29e'},
+  ]
+};
+
+// ═══════════════ STATE ═══════════════
+const S={cat:'birthday',tidx:0,lang:'tamil',ph:{main:null,groom:null,bride:null},done:false};
+let vidPreviewAnim=null,currentMode='image';
+
+// ═══════════════ INIT ═══════════════
+renderThemes();renderFields();renderGal();
+
+// ═══════════════ CAT SWITCH ═══════════════
+function swCat(cat,btn){
+  document.querySelectorAll('.cb2').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  const lbl={all:'✨ All Templates',kids:'👶 Kids',teen:'🎮 Teen',adult:'🥂 Adult',milestone:'🏆 Milestone',seasonal:'🌸 Seasonal',unique:'🎭 Unique'};
-  document.getElementById('gtitle').textContent=lbl[cat];
-  renderGallery(cat);
-}
-renderGallery('all');
-
-function attachTilt(){
-  document.querySelectorAll('.card3d').forEach(card=>{
-    const inner=card.querySelector('.card3d-inner');
-    card.addEventListener('mousemove',e=>{
-      const r=card.getBoundingClientRect();
-      const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-      inner.style.transform=`rotateY(${x*18}deg) rotateX(${-y*14}deg) scale(1.03)`;
-    });
-    card.addEventListener('mouseleave',()=>{inner.style.transform='rotateY(0) rotateX(0) scale(1)'});
-    card.addEventListener('touchmove',e=>{
-      const t=e.touches[0],r=card.getBoundingClientRect();
-      const x=(t.clientX-r.left)/r.width-.5,y=(t.clientY-r.top)/r.height-.5;
-      inner.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.02)`;
-    },{passive:true});
-    card.addEventListener('touchend',()=>{inner.style.transform='rotateY(0) rotateX(0) scale(1)'});
-  });
-}
-if(window.DeviceOrientationEvent){
-  window.addEventListener('deviceorientation',e=>{
-    const x=(e.gamma||0)/30,y=(e.beta||0)/40;
-    document.querySelectorAll('.card3d-inner').forEach(i=>{i.style.transform=`rotateY(${x*12}deg) rotateX(${-y*8}deg)`});
-  },{passive:true});
+  S.cat=cat;S.tidx=0;S.ph={main:null,groom:null,bride:null};S.done=false;
+  document.getElementById('abtnRow').style.display='none';
+  document.getElementById('ldtxt').textContent='';
+  stopVidPreview();
+  renderThemes();renderFields();renderGal();resetPrev();
 }
 
-function openM(id){
-  cur=T.find(t=>t.id===id);if(!cur)return;
-  document.getElementById('mTitle').textContent=`🎨 ${cur.lbl}`;
-  document.getElementById('fPanel').style.display='block';
-  document.getElementById('resPanel').style.display='none';
-  document.getElementById('overlay').classList.add('on');
-  document.body.style.overflow='hidden';
-  buildStage('invCardBody','invStage',cur);
-  setTimeout(()=>document.getElementById('fn').focus(),350);
+// ═══════════════ THEMES ═══════════════
+function renderThemes(){
+  document.getElementById('tsc').innerHTML=TM[S.cat].map((t,i)=>`
+    <div class="tth ${i===S.tidx?'on':''}" style="background:linear-gradient(135deg,${t.grd})" onclick="selT(${i})">
+      <span>${t.ico}</span><div class="tthl">${t.lbl}</div>
+    </div>`).join('');
 }
-function closeM(){document.getElementById('overlay').classList.remove('on');document.body.style.overflow=''}
-document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeM()});
+function selT(i){S.tidx=i;renderThemes();if(S.done)buildCard()}
 
-function buildStage(cardId,stageId,t,name,age,date,time,venue,host,rsvp,msg){
-  buildInvCard(cardId,t,name||'Your Name',age||'',date||'',time||'',venue||'',host||'',rsvp||'',msg||'');
-  const stage=document.getElementById(stageId);
-  stage.querySelectorAll('.ball-f,.conf-f').forEach(e=>e.remove());
-  const bpos=[{top:'8%',left:'8%'},{top:'5%',right:'10%'},{top:'15%',left:'75%'}];
-  t.bal.forEach((b,i)=>{
-    const el=document.createElement('div');el.className='ball-f';el.textContent=b;
-    el.style.cssText=`top:${bpos[i]?.top||'10%'};${bpos[i]?.right?'right:'+bpos[i].right:'left:'+(bpos[i]?.left||'10%')};--bd:${2.5+i*.7}s;--bdel:${i*.4}s`;
-    stage.appendChild(el);
-  });
-  const cpos=['top:80%,left:15%','top:85%,right:12%','top:20%,left:85%','top:72%,left:55%','top:60%,left:5%'];
-  t.conf.forEach((c,i)=>{
-    const el=document.createElement('div');el.className='conf-f';
-    const[tp,lp]=(cpos[i]||'top:50%,left:50%').split(',');
-    el.style.cssText=`${tp};${lp};--cd:${2.2+i*.5}s;--cdel:${i*.3}s`;el.textContent=c;
-    stage.appendChild(el);
-  });
+// ═══════════════ LANGUAGE ═══════════════
+function setL(btn){document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');S.lang=btn.dataset.l;if(S.done)buildCard()}
+function ta(){return S.lang==='tamil'||S.lang==='both'}
+
+// ═══════════════ FIELDS ═══════════════
+function renderFields(){
+  const w=document.getElementById('dynF');
+  if(S.cat==='birthday'){
+    w.innerHTML=`
+    <div class="phz" id="phzM"><input type="file" accept="image/*" onchange="hdPh(event,'main')">
+      <div style="font-size:1.3rem">📸</div><h4>Birthday Person Photo</h4><p>Optional – invitation-ல் தோன்றும்</p></div>
+    <div class="ppr" id="pprM"><img id="ppIM" src="" alt=""/><div><div style="font-size:.76rem;font-weight:700">Photo ready ✅</div><div class="prm" onclick="rmPh('main')">✕ Remove</div></div></div>
+    <div class="fg2">
+      <div class="fi ff"><label>🎂 Birthday Person Name *</label><input type="text" id="f_nm" placeholder="Dhiya / தியா"/></div>
+      <div class="fi"><label>🎈 Age</label><input type="text" id="f_ag" placeholder="7 / 50th"/></div>
+      <div class="fi"><label>📅 Date</label><input type="date" id="f_dt"/></div>
+      <div class="fi"><label>⏰ Time</label><input type="time" id="f_tm"/></div>
+      <div class="fi ff"><label>📍 Venue</label><input type="text" id="f_vn" placeholder="Party location"/></div>
+      <div class="fi"><label>👤 Hosted By</label><input type="text" id="f_hs" placeholder="Abi & Family"/></div>
+      <div class="fi"><label>📞 RSVP</label><input type="tel" id="f_rv" placeholder="9876543210"/></div>
+      <div class="fi ff"><label>💌 Special Message</label><textarea id="f_ms" placeholder="Dress code, gift info..."></textarea></div>
+      <div class="fi ff"><label>📱 WhatsApp Number *</label><input type="tel" id="f_wa" placeholder="9876543210"/></div>
+    </div>`;
+  }else if(S.cat==='wedding'){
+    w.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px">
+      <div>
+        <div class="phz" id="phzGroom" style="padding:9px"><input type="file" accept="image/*" onchange="hdPh(event,'groom')">
+          <div style="font-size:1.2rem">🤵</div><h4 style="font-size:.7rem">Groom Photo</h4></div>
+        <div class="ppr" id="pprGroom"><img id="ppIGroom" src="" alt=""/><div class="prm" onclick="rmPh('groom')">✕</div></div>
+      </div>
+      <div>
+        <div class="phz" id="phzBride" style="padding:9px"><input type="file" accept="image/*" onchange="hdPh(event,'bride')">
+          <div style="font-size:1.2rem">👰</div><h4 style="font-size:.7rem">Bride Photo</h4></div>
+        <div class="ppr" id="pprBride"><img id="ppIBride" src="" alt=""/><div class="prm" onclick="rmPh('bride')">✕</div></div>
+      </div>
+    </div>
+    <div class="fg2">
+      <div class="fi"><label>🤵 Groom Name *</label><input type="text" id="f_gr" placeholder="Groom"/></div>
+      <div class="fi"><label>👰 Bride Name *</label><input type="text" id="f_br" placeholder="Bride"/></div>
+      <div class="fi"><label>📅 Wedding Date</label><input type="date" id="f_dt"/></div>
+      <div class="fi"><label>⏰ Muhurtham</label><input type="time" id="f_tm"/></div>
+      <div class="fi ff"><label>📍 Wedding Venue</label><input type="text" id="f_vn" placeholder="Hall name"/></div>
+      <div class="fi ff"><label>🥂 Reception Venue</label><input type="text" id="f_rc" placeholder="Reception hall"/></div>
+      <div class="fi ff"><label>👪 Hosted By</label><input type="text" id="f_hs" placeholder="Family names"/></div>
+      <div class="fi"><label>📞 RSVP</label><input type="tel" id="f_rv" placeholder="9876543210"/></div>
+      <div class="fi"><label>📱 WhatsApp *</label><input type="tel" id="f_wa" placeholder="9876543210"/></div>
+    </div>`;
+  }else{
+    w.innerHTML=`
+    <div class="phz" id="phzM"><input type="file" accept="image/*" onchange="hdPh(event,'main')">
+      <div style="font-size:1.3rem">🏠</div><h4>Home / Family Photo</h4><p>Optional</p></div>
+    <div class="ppr" id="pprM"><img id="ppIM" src="" alt=""/><div><div style="font-size:.76rem;font-weight:700">Photo ready ✅</div><div class="prm" onclick="rmPh('main')">✕ Remove</div></div></div>
+    <div class="fg2">
+      <div class="fi ff"><label>👨‍👩‍👧 Host Names *</label><input type="text" id="f_hs2" placeholder="Abi & Family"/></div>
+      <div class="fi ff"><label>🏠 Home Name (Illam)</label><input type="text" id="f_hn" placeholder="e.g. Kaveri Illam"/></div>
+      <div class="fi"><label>📅 Date</label><input type="date" id="f_dt"/></div>
+      <div class="fi"><label>⏰ Time</label><input type="time" id="f_tm"/></div>
+      <div class="fi ff"><label>📍 Venue / Address</label><input type="text" id="f_vn" placeholder="New home address"/></div>
+      <div class="fi"><label>📞 RSVP</label><input type="tel" id="f_rv" placeholder="9876543210"/></div>
+      <div class="fi"><label>📱 WhatsApp *</label><input type="tel" id="f_wa" placeholder="9876543210"/></div>
+    </div>`;
+  }
 }
 
-function buildInvCard(tid,t,name,age,date,time,venue,host,rsvp,msg){
-  const isTa=lang==='tamil'||lang==='both';
-  const ageStr=age?(isTa?`${age}வது `:`${age} `):'';
-  const bdStr=isTa?`${ageStr}பிறந்தநாள்`:`${ageStr}Birthday`;
-  let hdr='';
-  if(lang==='tamil')hdr=`<div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:${t.sc};margin-bottom:5px">இனிய</div><div class="inv-title" style="color:${t.tc}">${name}</div><div class="inv-sub" style="color:${t.sc}">அவர்களின் ${bdStr} விழாவிற்கு அன்புடன் அழைக்கிறோம்</div>`;
-  else if(lang==='english')hdr=`<div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:${t.sc};margin-bottom:5px">You're Invited!</div><div class="inv-title" style="color:${t.tc}">${name}</div><div class="inv-sub" style="color:${t.sc}">${bdStr} Celebration 🎉</div>`;
-  else hdr=`<div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:${t.sc};margin-bottom:5px">வாருங்கள் • You're Invited</div><div class="inv-title" style="color:${t.tc}">${name}</div><div class="inv-sub" style="color:${t.sc}">${bdStr} • Birthday Celebration</div>`;
-  const dl=isTa?'தேதி':'Date',tl=isTa?'நேரம்':'Time',vl=isTa?'இடம்':'Venue',hl=isTa?'அழைப்பவர்':'Hosted by';
-  const rows=[date?[dl,'📅',date]:null,time?[tl,'⏰',time]:null,venue?[vl,'📍',venue]:null,host?[hl,'👪',host]:null].filter(Boolean);
-  const detHtml=rows.length?`<hr class="inv-divider" style="border-color:${t.sc}">${rows.map(([l,i,v])=>`<div class="inv-detail"><div class="inv-detail-lbl" style="color:${t.sc}">${l}</div><div class="inv-detail-val" style="color:${t.tc}">${i} ${v}</div></div>`).join('')}`:'';
-  const msgHtml=msg?`<div class="inv-msg" style="background:${t.sc}22;color:${t.tc}">💌 ${msg}</div>`:'';
-  const rsvpHtml=rsvp?`<hr class="inv-divider" style="border-color:${t.sc}"><div class="inv-rsvp-lbl" style="color:${t.sc}">RSVP</div><div class="inv-rsvp-val" style="color:${t.tc}">📞 ${rsvp}</div>`:'';
-  const photoHtml=photo?`<img class="inv-photo" src="${photo}" alt="${name}">`:'';
-  const closing=isTa?'உங்கள் வருகை எங்களை மகிழ்விக்கும் 🙏':'Your presence makes it special 🙏';
-  document.getElementById(tid).innerHTML=`<div class="inv-inner" style="background:${t.bg};border:${t.border}"><span class="inv-main-icon">${t.ico}</span>${photoHtml}${hdr}${detHtml}${msgHtml}${rsvpHtml}<div class="inv-close-line" style="color:${t.sc}">${closing}</div><div class="inv-emojis">${t.bal.join(' ')}</div></div>`;
-}
-
-function refreshPreview(){
-  if(!cur)return;
-  const n=document.getElementById('fn').value.trim()||'Your Name';
-  buildInvCard('invCardBody',cur,n,'','','','','','','');
-}
-function handlePh(e){
+// ═══════════════ PHOTO HANDLERS ═══════════════
+function hdPh(e,k){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
-  r.onload=ev=>{photo=ev.target.result;document.getElementById('phPrev').src=photo;document.getElementById('phPrevWrap').style.display='flex';document.getElementById('phZone').style.display='none';refreshPreview()};
+  r.onload=ev=>{
+    S.ph[k]=ev.target.result;
+    const K=k==='main'?'M':(k.charAt(0).toUpperCase()+k.slice(1));
+    const pz=document.getElementById('phz'+K);
+    const pp=document.getElementById('ppr'+K);
+    const pi=document.getElementById('ppI'+K);
+    if(pz)pz.style.display='none';
+    if(pp)pp.style.display='flex';
+    if(pi)pi.src=S.ph[k];
+    if(S.done)buildCard();
+  };
   r.readAsDataURL(f);
 }
-function rmPh(){photo=null;document.getElementById('phInput').value='';document.getElementById('phPrevWrap').style.display='none';document.getElementById('phZone').style.display='block';refreshPreview()}
-function setLang(btn){document.querySelectorAll('.lbtn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');lang=btn.dataset.lang;refreshPreview()}
+function rmPh(k){
+  S.ph[k]=null;
+  const K=k==='main'?'M':(k.charAt(0).toUpperCase()+k.slice(1));
+  const pz=document.getElementById('phz'+K);
+  const pp=document.getElementById('ppr'+K);
+  if(pz)pz.style.display='block';
+  if(pp)pp.style.display='none';
+  if(S.done)buildCard();
+}
 
-async function generate(){
-  const name=document.getElementById('fn').value.trim(),wa=document.getElementById('fw').value.trim();
-  if(!name){toast('⚠️ Birthday person பெயர் கொடுங்க!');return}
-  if(!wa){toast('⚠️ WhatsApp number கொடுங்க!');return}
-  ldr('💳 Payment processing...');await sleep(800);
-  ldr('✨ 3D Invitation design பண்றோம்...');await sleep(1000);
-  ldr('📱 WhatsApp delivery தயாரிக்கிறோம்...');await sleep(500);
-  ldrOff();
-  const age=document.getElementById('fa').value.trim(),date=document.getElementById('fd').value,time=document.getElementById('ft').value;
-  const venue=document.getElementById('fv').value.trim(),host=document.getElementById('fh').value.trim();
-  const rsvp=document.getElementById('fr').value.trim(),msg=document.getElementById('fm').value.trim();
-  let ds='',ts='';
-  if(date){const d=new Date(date);ds=d.toLocaleDateString('ta-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
-  if(time){const[h,m]=time.split(':');const hr=parseInt(h);ts=`${hr>12?hr-12:hr}:${m} ${hr>=12?'PM':'AM'}`}
-  buildStage('resCardBody','resStage',cur,name,age,ds,ts,venue,host,rsvp,msg);
-  document.getElementById('fPanel').style.display='none';
-  document.getElementById('resPanel').style.display='block';
-  document.getElementById('overlay').scrollTop=0;
-  toast('🎉 3D Invitation ready!');
+// ═══════════════ HELPERS ═══════════════
+function gv(id){const e=document.getElementById(id);return e?e.value.trim():''}
+function fd(d){if(!d)return'';const[y,m,day]=d.split('-');const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return`${day} ${mn[m-1]} ${y}`}
+function ft(t){if(!t)return'';const[h,m]=t.split(':');const hr=parseInt(h);return`${hr>12?hr-12:hr||12}:${m} ${hr>=12?'PM':'AM'}`}
+function resetPrev(){
+  document.getElementById('icb').innerHTML=`<div style="padding:38px 18px;text-align:center;background:linear-gradient(160deg,#1a0a00,#3d0030);color:rgba(255,255,255,.3);font-size:.82rem"><div style="font-size:1.9rem;margin-bottom:9px">🎴</div>Fill details &<br/><strong style="color:rgba(255,255,255,.55)">Generate Invitation</strong></div>`;
 }
+
+// ═══════════════ GENERATE ═══════════════
+async function gen(){
+  const lt=document.getElementById('ldtxt');
+  lt.textContent='வடிவமைக்கிறோம்... / Crafting...';
+  await sleep(750);
+  buildCard();S.done=true;
+  lt.textContent='✅ Your 3D invitation is ready!';
+  document.getElementById('abtnRow').style.display='grid';
+  if(currentMode==='video')startVidPreview();
+  toast('🎉 Invitation ready!');
+}
+
+// ═══════════════ BUILD CARD ═══════════════
+function buildCard(){
+  const t=TM[S.cat][S.tidx];
+  const st=document.getElementById('stage');
+  const cb=document.getElementById('icb');
+  st.querySelectorAll('.bf').forEach(e=>e.remove());
+  const bp=[{top:'8%',left:'8%'},{top:'5%',right:'10%'},{top:'15%',left:'75%'}];
+  t.bal.forEach((b,i)=>{
+    const el=document.createElement('div');el.className='bf';el.textContent=b;
+    el.style.cssText=`position:absolute;top:${bp[i]?.top||'10%'};${bp[i]?.right?'right:'+bp[i].right:'left:'+(bp[i]?.left||'10%')};--bd:${2.4+i*.7}s;--bdl:${i*.4}s`;
+    st.appendChild(el);
+  });
+  cb.style.cssText=`border-radius:16px;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,.52);border:${t.bdr}`;
+  if(S.cat==='birthday')cb.innerHTML=bdHTML(t);
+  else if(S.cat==='wedding')cb.innerHTML=wdHTML(t);
+  else cb.innerHTML=hwHTML(t);
+  setupTilt(document.getElementById('w3d'));
+  if(currentMode==='video')startVidPreview();
+}
+
+// ═══════════════ CARD HTML BUILDERS ═══════════════
+function bdHTML(t){
+  const nm=gv('f_nm')||'Your Name',ag=gv('f_ag'),dt=fd(gv('f_dt')),tm=ft(gv('f_tm'));
+  const vn=gv('f_vn'),hs=gv('f_hs'),rv=gv('f_rv'),ms=gv('f_ms');
+  const isTa=ta();
+  const agS=ag?(isTa?`${ag}வது `:`${ag} `):'';
+  const bdL=isTa?`${agS}பிறந்தநாள் விழா`:`${agS}Birthday Celebration`;
+  const inv=isTa?'அன்புடன் அழைக்கிறோம்':"You're Invited!";
+  const cl=isTa?'உங்கள் வருகை எங்களை மகிழ்விக்கும் 🙏':'Your presence makes it special 🙏';
+  const ph=S.ph.main?`<img class="ii-photo" src="${S.ph.main}" alt="${nm}"/>`:'';
+  const rows=[dt?[isTa?'தேதி':'Date','📅',dt+(tm?' · '+tm:'')]:null,vn?[isTa?'இடம்':'Venue','📍',vn]:null,hs?[isTa?'அழைப்பவர்':'Hosted By','👪',hs]:null,rv?['RSVP','📞',rv]:null].filter(Boolean);
+  return`<div class="ii" style="background:${t.bg}"><span class="ii-ico">${t.ico}</span>${ph}
+    <div style="font-size:.54rem;letter-spacing:2px;text-transform:uppercase;color:${t.sc};margin-bottom:3px">${inv}</div>
+    <div class="ii-title" style="color:${t.tc}">${nm}</div>
+    <div class="ii-sub" style="color:${t.sc}">${bdL} 🎉</div>
+    ${rows.length?`<hr class="ii-div" style="border-color:${t.sc}"/>${rows.map(([l,i,v])=>`<div><div class="ii-dlbl" style="color:${t.sc}">${l}</div><div class="ii-dval" style="color:${t.tc}">${i} ${v}</div></div>`).join('')}`:''}
+    ${ms?`<div class="ii-msg" style="background:${t.sc}20;color:${t.tc}">💌 ${ms}</div>`:''}
+    <div class="ii-cl" style="color:${t.sc}">${cl}</div>
+    <div class="ii-em">${t.bal.join(' ')}</div>
+    <div class="ii-cr" style="color:${t.sc}">InviteZoom · 100% Free</div></div>`;
+}
+function wdHTML(t){
+  const gr=gv('f_gr')||'Groom',br=gv('f_br')||'Bride',dt=fd(gv('f_dt')),tm=ft(gv('f_tm'));
+  const vn=gv('f_vn'),rc=gv('f_rc'),hs=gv('f_hs'),rv=gv('f_rv');
+  const isTa=ta();
+  const cl=isTa?'உங்கள் ஆசீர்வாதம் வேண்டுகிறோம் 🙏':'We seek your blessings 🙏';
+  const dualPh=(S.ph.groom||S.ph.bride)?`<div class="dr">
+    ${S.ph.groom?`<div class="dw"><img class="ii-photo" style="width:56px;height:56px" src="${S.ph.groom}" alt="${gr}"/><div class="dwl" style="color:${t.sc}">${isTa?'மணமகன்':'Groom'}</div></div>`:''}
+    <div style="font-size:1rem;color:${t.sc};align-self:center">♥</div>
+    ${S.ph.bride?`<div class="dw"><img class="ii-photo" style="width:56px;height:56px" src="${S.ph.bride}" alt="${br}"/><div class="dwl" style="color:${t.sc}">${isTa?'மணமகள்':'Bride'}</div></div>`:''}
+  </div>`:'';
+  return`<div class="ii" style="background:${t.bg}"><span class="ii-ico">💍</span>${dualPh}
+    <div style="font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:${t.sc};margin-bottom:3px">${isTa?'திருமண அழைப்பிதழ்':'Wedding Invitation'}</div>
+    <div class="ii-title" style="color:${t.tc}">${gr}</div>
+    <div style="font-size:.95rem;color:${t.sc};margin:1px 0">&amp;</div>
+    <div class="ii-title" style="color:${t.tc}">${br}</div>
+    <hr class="ii-div" style="border-color:${t.sc}"/>
+    ${dt?`<div><div class="ii-dlbl" style="color:${t.sc}">${isTa?'தேதி':'Date'}</div><div class="ii-dval" style="color:${t.tc}">📅 ${dt}${tm?' · '+tm:''}</div></div>`:''}
+    ${vn?`<div><div class="ii-dlbl" style="color:${t.sc}">${isTa?'திருமண இடம்':'Venue'}</div><div class="ii-dval" style="color:${t.tc}">📍 ${vn}</div></div>`:''}
+    ${rc?`<div><div class="ii-dlbl" style="color:${t.sc}">${isTa?'வரவேற்பு':'Reception'}</div><div class="ii-dval" style="color:${t.tc}">🥂 ${rc}</div></div>`:''}
+    ${hs?`<div style="font-size:.68rem;color:${t.sc};margin-top:5px">${isTa?'குடும்பத்தினர்':'With blessings of'}: ${hs}</div>`:''}
+    ${rv?`<hr class="ii-div" style="border-color:${t.sc}"/><div class="ii-rl" style="color:${t.sc}">RSVP</div><div class="ii-rv" style="color:${t.tc}">📞 ${rv}</div>`:''}
+    <div class="ii-cl" style="color:${t.sc}">${cl}</div>
+    <div class="ii-em">${t.bal.join(' ')}</div>
+    <div class="ii-cr" style="color:${t.sc}">InviteZoom · 100% Free</div></div>`;
+}
+function hwHTML(t){
+  const hs=gv('f_hs2')||'Host Family',hn=gv('f_hn'),dt=fd(gv('f_dt')),tm=ft(gv('f_tm')),vn=gv('f_vn'),rv=gv('f_rv');
+  const isTa=ta();
+  const ph=S.ph.main?`<img class="ii-photo" src="${S.ph.main}" alt="${hs}"/>`:'';
+  const cl=isTa?'உங்கள் வருகை எங்களை மகிழ்விக்கும் 🙏':'Your presence makes it special 🙏';
+  return`<div class="ii" style="background:${t.bg}"><span class="ii-ico">${t.ico}</span>${ph}
+    <div style="font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:${t.sc};margin-bottom:3px">${isTa?'இல்ல பிரவேசம்':'Griha Pravesh'}</div>
+    ${hn?`<div class="ii-title" style="color:${t.tc}">${hn}</div>`:''}
+    <div class="ii-sub" style="color:${t.sc}">🏡 ${hs}</div>
+    <hr class="ii-div" style="border-color:${t.sc}"/>
+    ${dt?`<div><div class="ii-dlbl" style="color:${t.sc}">${isTa?'தேதி':'Date'}</div><div class="ii-dval" style="color:${t.tc}">📅 ${dt}${tm?' · '+tm:''}</div></div>`:''}
+    ${vn?`<div><div class="ii-dlbl" style="color:${t.sc}">${isTa?'இடம்':'Venue'}</div><div class="ii-dval" style="color:${t.tc}">📍 ${vn}</div></div>`:''}
+    ${rv?`<hr class="ii-div" style="border-color:${t.sc}"/><div class="ii-rl" style="color:${t.sc}">RSVP</div><div class="ii-rv" style="color:${t.tc}">📞 ${rv}</div>`:''}
+    <div class="ii-cl" style="color:${t.sc}">${cl}</div>
+    <div class="ii-em">${t.bal.join(' ')}</div>
+    <div class="ii-cr" style="color:${t.sc}">InviteZoom · 100% Free</div></div>`;
+}
+
+// ═══════════════ MODE TOGGLE ═══════════════
+function setMode(mode){
+  currentMode=mode;
+  const iBtn=document.getElementById('modeImg'),vBtn=document.getElementById('modeVid');
+  const iPane=document.getElementById('imgMode'),vPane=document.getElementById('vidMode');
+  if(mode==='video'){
+    vBtn.style.background='linear-gradient(135deg,#7c3aed,#a855f7)';vBtn.style.color='#fff';
+    iBtn.style.background='transparent';iBtn.style.color='var(--mt)';
+    iPane.style.display='none';vPane.style.display='flex';
+    if(S.done)startVidPreview();else{
+      const vpc=document.getElementById('vidPreviewCanvas');
+      vpc.width=260;vpc.height=346;
+      const vx=vpc.getContext('2d');
+      vx.fillStyle='#1a0a00';vx.fillRect(0,0,260,346);
+      vx.fillStyle='rgba(255,255,255,.3)';vx.font='36px serif';vx.textAlign='center';
+      vx.fillText('🎬',130,155);vx.font='700 13px Nunito,sans-serif';
+      vx.fillText('Generate invitation first',130,185);
+    }
+  }else{
+    iBtn.style.background='linear-gradient(135deg,var(--sf),var(--mg))';iBtn.style.color='#fff';
+    vBtn.style.background='transparent';vBtn.style.color='var(--mt)';
+    vPane.style.display='none';iPane.style.display='block';
+    stopVidPreview();
+  }
+}
+
+// ═══════════════ VIDEO PREVIEW ═══════════════
+function startVidPreview(){
+  stopVidPreview();
+  const vpc=document.getElementById('vidPreviewCanvas');
+  const vx=vpc.getContext('2d');
+  vpc.width=260;vpc.height=346;
+  const t=TM[S.cat][S.tidx];
+  const vp2=Array.from({length:45},()=>({x:Math.random()*260,y:Math.random()*346,w:4+Math.random()*5,h:3+Math.random()*5,col:PC[0|Math.random()*PC.length],sh:PS[0|Math.random()*PS.length],vx:(Math.random()-.5)*1.8,vy:1.2+Math.random()*1.8,rot:Math.random()*360,rv:(Math.random()-.5)*4,op:1,lf:Math.random()*180}));
+  let fr=0;
+  async function frame(){
+    if(currentMode!=='video')return;
+    vx.clearRect(0,0,260,346);
+    const g=vx.createLinearGradient(0,0,260,346);
+    const gc=t.grd.split(',');g.addColorStop(0,gc[0].trim());g.addColorStop(1,(gc[1]||gc[0]).trim());
+    vx.fillStyle=g;vx.fillRect(0,0,260,346);
+    try{
+      const snap=await html2canvas(document.getElementById('icb'),{scale:.85,useCORS:true,backgroundColor:null,logging:false,allowTaint:true});
+      const cw=228,ch=304,cx2=16,cy2=21+Math.sin(fr*.04)*5;
+      const sk=Math.sin(fr*.025)*.012;
+      vx.save();vx.shadowColor='rgba(0,0,0,.5)';vx.shadowBlur=18;
+      vx.translate(130,173+Math.sin(fr*.04)*5);vx.transform(1,0,sk,1,0,0);
+      vx.drawImage(snap,-114,-152,228,304);vx.restore();
+    }catch(_){}
+    vp2.forEach((p,i)=>{
+      p.x+=p.vx+Math.sin(p.lf*.03)*.3;p.y+=p.vy;p.rot+=p.rv;p.lf++;
+      if(p.lf>180)p.op=Math.max(0,1-(p.lf-180)/30);
+      if(p.y>360||p.op<=0)vp2[i]={x:Math.random()*260,y:-12,w:4+Math.random()*5,h:3+Math.random()*5,col:PC[0|Math.random()*PC.length],sh:PS[0|Math.random()*PS.length],vx:(Math.random()-.5)*1.8,vy:1.2+Math.random()*1.8,rot:Math.random()*360,rv:(Math.random()-.5)*4,op:1,lf:0};
+      vx.save();vx.translate(p.x,p.y);vx.rotate(p.rot*Math.PI/180);vx.globalAlpha=p.op;vx.fillStyle=p.col;
+      if(p.sh==='r')vx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      else if(p.sh==='c'){vx.beginPath();vx.arc(0,0,p.w/2,0,Math.PI*2);vx.fill()}
+      else{vx.beginPath();vx.moveTo(0,-p.h/2);vx.lineTo(p.w/2,p.h/2);vx.lineTo(-p.w/2,p.h/2);vx.closePath();vx.fill()}
+      vx.restore();
+    });
+    t.bal.forEach((b,i)=>{
+      vx.globalAlpha=.7;vx.font='18px serif';vx.textAlign='left';
+      vx.fillText(b,30+i*80,30+Math.sin(fr*.04+i*1.5)*9);vx.globalAlpha=1;
+    });
+    const vg=vx.createRadialGradient(130,173,60,130,173,200);
+    vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.22)');
+    vx.fillStyle=vg;vx.fillRect(0,0,260,346);
+    fr++;vidPreviewAnim=requestAnimationFrame(frame);
+  }
+  frame();
+}
+function stopVidPreview(){if(vidPreviewAnim){cancelAnimationFrame(vidPreviewAnim);vidPreviewAnim=null}}
+
+// ═══════════════ VIDEO DOWNLOAD ═══════════════
+async function dlVideo(){
+  if(!S.done){toast('⚠️ Generate invitation first!');return}
+  if(!window.MediaRecorder){toast('⚠️ Use Chrome/Edge for video export.');return}
+  const btn=document.getElementById('vidBtn'),txt=document.getElementById('vidBtnTxt');
+  btn.disabled=true;txt.textContent='🔴 Recording 8s...';
+  showLdr('🎬 Recording video invitation...');
+  try{
+    if(currentMode!=='video'){setMode('video');await sleep(700)}
+    const vpc=document.getElementById('vidPreviewCanvas');
+    const aCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const dest=aCtx.createMediaStreamDestination();
+    const notes=[261,329,392,523,659,784,1047];let ni=0;
+    const chime=setInterval(()=>{
+      const o=aCtx.createOscillator(),g=aCtx.createGain();
+      o.connect(g);g.connect(dest);o.type='triangle';
+      o.frequency.value=notes[ni%notes.length];ni++;
+      g.gain.setValueAtTime(.16,aCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,aCtx.currentTime+.42);
+      o.start();o.stop(aCtx.currentTime+.42);
+    },400);
+    const stream=vpc.captureStream(30);
+    stream.addTrack(dest.stream.getAudioTracks()[0]);
+    let mime='video/webm;codecs=vp9,opus';
+    if(!MediaRecorder.isTypeSupported(mime))mime='video/webm';
+    const rec=new MediaRecorder(stream,{mimeType:mime});
+    const chunks=[];
+    rec.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
+    rec.onstop=()=>{
+      clearInterval(chime);aCtx.close();hideLdr();
+      btn.disabled=false;txt.textContent='Download Video Invite';
+      const blob=new Blob(chunks,{type:mime});
+      const url=URL.createObjectURL(blob);
+      const lk=document.createElement('a');
+      lk.download=`InviteZoom_Video_${S.cat}_${Date.now()}.webm`;
+      lk.href=url;lk.click();
+      setTimeout(()=>URL.revokeObjectURL(url),6000);
+      toast('🎬 Video saved!');
+      setTimeout(()=>openM('sucMod'),500);
+    };
+    rec.start(100);
+    await sleep(8000);
+    rec.stop();
+  }catch(e){
+    hideLdr();
+    document.getElementById('vidBtn').disabled=false;
+    document.getElementById('vidBtnTxt').textContent='Download Video Invite';
+    toast('⚠️ Video failed. Use Chrome/Edge.');
+  }
+}
+
+// ═══════════════ 3D TILT ═══════════════
+function setupTilt(el){
+  el.onmousemove=e=>{const r=el.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`rotateY(${x*18}deg) rotateX(${-y*14}deg) translateY(0)`;el.style.animation='none'};
+  el.onmouseleave=()=>{el.style.transform='';el.style.animation=''};
+  el.ontouchmove=e=>{const t=e.touches[0],r=el.getBoundingClientRect();const x=(t.clientX-r.left)/r.width-.5,y=(t.clientY-r.top)/r.height-.5;el.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) translateY(0)`;el.style.animation='none'};
+  el.ontouchend=()=>{el.style.transform='';el.style.animation=''};
+}
+
+// ═══════════════ GALLERY ═══════════════
+function renderGal(){
+  const tl=TM[S.cat];
+  const cl={birthday:'Birthday',wedding:'Wedding',housewarm:'House Warming'};
+  document.getElementById('galt').textContent=`✨ ${cl[S.cat]} Templates (${tl.length})`;
+  document.getElementById('gg').innerHTML=tl.map((t,i)=>`
+    <div class="cd" onclick="qs(${i})"><div class="cdi">
+      <div class="th2" style="background:${t.bg}">
+        <span class="tico">${t.ico}</span>
+        <div class="tlbl2" style="color:${t.tc}">${t.lbl}</div>
+        ${t.bal.map((b,j)=>`<span class="tbal" style="top:${[8,55,78][j]}%;${j%2?'right':'left'}:${[8,74,42][j]}%">${b}</span>`).join('')}
+      </div>
+      <div class="cdf"><span class="cdn">${t.lbl}</span><span class="cdfr">Free</span></div>
+    </div></div>`).join('');
+  attachGalTilt();
+}
+function qs(i){S.tidx=i;renderThemes();window.scrollTo({top:0,behavior:'smooth'});toast(`🎨 ${TM[S.cat][i].lbl} selected!`);if(S.done)buildCard()}
+function attachGalTilt(){
+  document.querySelectorAll('.cd').forEach(c=>{
+    const inn=c.querySelector('.cdi');
+    c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;inn.style.transform=`rotateY(${x*18}deg) rotateX(${-y*14}deg) scale(1.03)`});
+    c.addEventListener('mouseleave',()=>{inn.style.transform='rotateY(0) rotateX(0) scale(1)'});
+    c.addEventListener('touchmove',e=>{const t=e.touches[0],r=c.getBoundingClientRect();const x=(t.clientX-r.left)/r.width-.5,y=(t.clientY-r.top)/r.height-.5;inn.style.transform=`rotateY(${x*14}deg) rotateX(${-y*10}deg) scale(1.02)`},{passive:true});
+    c.addEventListener('touchend',()=>{inn.style.transform='rotateY(0) rotateX(0) scale(1)'});
+  });
+}
+
+// ═══════════════ DOWNLOAD IMAGE ═══════════════
+async function dlCard(){
+  if(!S.done){toast('⚠️ Generate invitation first!');return}
+  const cb=document.getElementById('icb');
+  showLdr('📸 Preparing image...');
+  try{
+    const w3=document.getElementById('w3d');
+    const orig=w3.style.transform;w3.style.transform='none';w3.style.animation='none';
+    const cv=await html2canvas(cb,{scale:2.5,useCORS:true,backgroundColor:null,logging:false,allowTaint:true});
+    w3.style.transform=orig;w3.style.animation='';
+    hideLdr();
+    const lk=document.createElement('a');
+    lk.download=`InviteZoom_${S.cat}_${Date.now()}.png`;
+    lk.href=cv.toDataURL('image/png');lk.click();
+    setTimeout(()=>openM('sucMod'),500);
+  }catch(e){hideLdr();toast('⚠️ Download failed. Try again.')}
+}
+
+// ═══════════════ SHARE BUTTONS ═══════════════
+const SHARE_NETS=[
+  {name:'WhatsApp', icon:'📱', color:'#25D366',
+   fn:()=>{const wa=gv('f_wa');window.open(`https://wa.me/${wa?'91'+wa.replace(/\D/g,''):''}?text=${encodeURIComponent(buildShareText())}`,'_blank')}},
+  {name:'Telegram', icon:'✈️', color:'#0088cc',
+   fn:()=>window.open(`https://t.me/share/url?url=${encodeURIComponent('https://invitezoom.vercel.app')}&text=${encodeURIComponent(buildShareText())}`,'_blank')},
+  {name:'Facebook', icon:'👍', color:'#1877F2',
+   fn:()=>window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://invitezoom.vercel.app')}`,'_blank')},
+  {name:'Instagram',icon:'📸', color:'#E1306C',
+   fn:()=>{navigator.clipboard?.writeText('https://invitezoom.vercel.app').then(()=>toast('📋 Link copied! Paste in Instagram')).catch(()=>toast('🔗 invitezoom.vercel.app'))}},
+];
+function buildShareBtns(id){
+  const c=document.getElementById(id);if(!c)return;
+  c.innerHTML=SHARE_NETS.map((n,i)=>`
+    <button onclick="SHARE_NETS[${i}].fn()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 12px;border:none;border-radius:10px;background:${n.color};color:#fff;font-family:'Nunito',sans-serif;font-size:.74rem;font-weight:800;cursor:pointer;width:100%;transition:opacity .15s" onmousedown="this.style.opacity='.8'" onmouseup="this.style.opacity='1'">
+      ${n.icon} ${n.name}
+    </button>`).join('');
+}
+function buildShareText(){
+  let msg='🎉 *InviteZoom Invitation* ✨\n\n';
+  if(S.cat==='birthday'){
+    const nm=gv('f_nm'),ag=gv('f_ag'),dt=fd(gv('f_dt')),tm=ft(gv('f_tm')),vn=gv('f_vn'),hs=gv('f_hs'),rv=gv('f_rv');
+    msg+=`🎈 *Birthday Invitation*\n\n`;
+    if(nm)msg+=`🎂 *Name:* ${nm}\n`;if(ag)msg+=`🎊 *Turning:* ${ag}!\n`;
+    if(dt)msg+=`📅 *Date:* ${dt}\n`;if(tm)msg+=`⏰ *Time:* ${tm}\n`;
+    if(vn)msg+=`📍 *Venue:* ${vn}\n`;if(hs)msg+=`🥂 *Hosted By:* ${hs}\n`;if(rv)msg+=`📞 *RSVP:* ${rv}\n`;
+  }else if(S.cat==='wedding'){
+    const gr=gv('f_gr'),br=gv('f_br'),dt=fd(gv('f_dt')),tm=ft(gv('f_tm')),vn=gv('f_vn'),rc=gv('f_rc'),hs=gv('f_hs'),rv=gv('f_rv');
+    msg+=`💍 *Wedding Invitation*\n\n`;
+    if(gr&&br)msg+=`👰 *${gr} ♥ ${br}*\n\n`;
+    if(dt)msg+=`📅 *Date:* ${dt}\n`;if(tm)msg+=`⏰ *Muhurtham:* ${tm}\n`;
+    if(vn)msg+=`📍 *Venue:* ${vn}\n`;if(rc)msg+=`🥂 *Reception:* ${rc}\n`;
+    if(hs)msg+=`🙏 *Hosted By:* ${hs}\n`;if(rv)msg+=`📞 *RSVP:* ${rv}\n`;
+  }else{
+    const hs=gv('f_hs2'),hn=gv('f_hn'),dt=fd(gv('f_dt')),tm=ft(gv('f_tm')),vn=gv('f_vn'),rv=gv('f_rv');
+    msg+=`🏡 *House Warming Invitation*\n\n`;
+    if(hs)msg+=`👨‍👩‍👧 *Hosts:* ${hs}\n`;if(hn)msg+=`🏠 *Home:* ${hn}\n`;
+    if(dt)msg+=`📅 *Date:* ${dt}\n`;if(tm)msg+=`⏰ *Time:* ${tm}\n`;
+    if(vn)msg+=`📍 *Venue:* ${vn}\n`;if(rv)msg+=`📞 *RSVP:* ${rv}\n`;
+  }
+  msg+=`\n✨ _Free on InviteZoom_\n🔗 invitezoom.vercel.app`;
+  return msg;
+}
+buildShareBtns('footShareBtns');
+const _origOpenM=openM;
+openM=function(id){_origOpenM(id);if(id==='sucMod')buildShareBtns('shareBtns')};
+
+// ═══════════════ WHATSAPP ═══════════════
 function sendWA(){
-  const wa=document.getElementById('fw').value.trim(),n=document.getElementById('fn').value.trim();
-  if(!wa){toast('WhatsApp number இல்லை!');return}
-  window.open(`https://wa.me/91${wa}?text=${encodeURIComponent(`🎉 ${n} அவர்களின் 3D Birthday Invitation தயார்!\nInviteZoom ✨ 🎂`)},'_blank'}`);
+  if(!S.done){toast('⚠️ Generate invitation first!');return}
+  const wa=gv('f_wa');if(!wa){toast('⚠️ WhatsApp number needed!');return}
+  window.open(`https://wa.me/91${wa.replace(/\D/g,'')}?text=${encodeURIComponent(buildShareText())}`,'_blank');
 }
-function dlCard(){toast('📸 Screenshot எடுத்து save பண்ணுங்க!')}
-function newOrder(){
-  document.getElementById('fPanel').style.display='block';
-  document.getElementById('resPanel').style.display='none';
-  ['fn','fa','fd','ft','fv','fh','fr','fm','fw'].forEach(id=>{document.getElementById(id).value=''});
-  rmPh();document.getElementById('overlay').scrollTop=0;refreshPreview();
+
+// ═══════════════ EMAILJS + GAS NEWSLETTER ═══════════════
+const EJS={
+  publicKey:'a7magYNS1yvIAiWpY',
+  serviceId:'service_qxahtkf',
+  templateId:'template_s2q4z0m'
+};
+const GAS_URL='https://script.google.com/macros/s/AKfycbwznQ1E3ycdFLNDGjR1-6t9tGoEalZvXu5Sg4p-TIyGdy3Ax6H7AUd9wz5hR9WYAAzj/exec';
+(function(){if(typeof emailjs!=='undefined')emailjs.init({publicKey:EJS.publicKey})})();
+
+async function subNews(){
+  const emailVal=document.getElementById('nlEmail').value.trim();
+  if(!emailVal||!emailVal.includes('@')){toast('⚠️ Enter a valid email!');return}
+  const btn=document.getElementById('nlBtn');
+  btn.textContent='Sending...';btn.disabled=true;
+  const payload={
+    subscriber_email:emailVal,
+    to_email:'ideozoomacademy@gmail.com',
+    message:`New InviteZoom subscriber: ${emailVal}`,
+    date:new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})
+  };
+  let ejsOk=false,gasOk=false;
+  try{
+    if(typeof emailjs==='undefined')throw new Error('not loaded');
+    await emailjs.send(EJS.serviceId,EJS.templateId,payload);
+    ejsOk=true;
+  }catch(e){console.warn('EmailJS:',e)}
+  try{
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:emailVal,source:'InviteZoom Newsletter',date:payload.date})});
+    gasOk=true;
+  }catch(e){console.warn('GAS:',e)}
+  document.getElementById('nlEmail').value='';
+  btn.textContent='Subscribe ✉️';btn.disabled=false;
+  if(ejsOk||gasOk)toast('✅ Subscribed! Thank you 🎉');
+  else{window.location.href=`mailto:ideozoomacademy@gmail.com?subject=InviteZoom Newsletter&body=New subscriber: ${emailVal}`;toast('📧 Opening mail...')}
 }
-function ldr(m){document.getElementById('lmsg').textContent=m;document.getElementById('ldr').classList.add('on')}
-function ldrOff(){document.getElementById('ldr').classList.remove('on')}
+
+// ═══════════════ UTILS ═══════════════
+function openM(id){document.getElementById(id).classList.add('on')}
+function closeM(id){document.getElementById(id).classList.remove('on')}
+document.querySelectorAll('.ov,.aov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on')}));
+function showLdr(m){document.getElementById('lmsg').textContent=m;document.getElementById('ldr').classList.add('on')}
+function hideLdr(){document.getElementById('ldr').classList.remove('on')}
+function toast(m){const e=document.getElementById('tst');e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3000)}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-function toast(m){const el=document.getElementById('tst');el.textContent=m;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),3000)}
 </script>
 </body>
 </html>
