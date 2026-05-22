@@ -1,0 +1,15 @@
+# robots.txt – InviteZoom
+# https://invitezoom.vercel.app
+
+User-agent: *
+Allow: /
+
+# Block sensitive or unnecessary paths
+Disallow: /api/
+Disallow: /*.json$
+
+# Sitemap location
+Sitemap: https://invitezoom.vercel.app/sitemap.xml
+
+# Crawl delay (optional – be nice to crawlers)
+Crawl-delay: 10
