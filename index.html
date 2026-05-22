@@ -3,7 +3,51 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>InviteZoom – Free 3D Digital Invitations</title>
+
+<!-- Primary SEO -->
+<title>InviteZoom – Free Online Invitation Maker | Wedding, Birthday & Housewarming Cards</title>
+<meta name="description" content="Create free 3D digital invitations online! Wedding invitations, birthday cards, housewarming invitation maker with 30 premium templates. No payment, instant download, WhatsApp share."/>
+<meta name="keywords" content="free invitation maker, wedding invitation, birthday invitation, housewarming invitation, online invitation card, free wedding card, birthday card maker, invitation templates, free online cards, 3D invitation, Tamil invitation, digital invitation maker"/>
+<meta name="author" content="InviteZoom – DJ Groups"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://invitezoom.vercel.app/"/>
+
+<!-- Open Graph (Facebook, WhatsApp preview) -->
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="InviteZoom – Free Online Invitation Maker"/>
+<meta property="og:description" content="Create stunning free 3D wedding, birthday & housewarming invitations online. 30 premium templates, photo upload, instant WhatsApp share."/>
+<meta property="og:url" content="https://invitezoom.vercel.app/"/>
+<meta property="og:site_name" content="InviteZoom"/>
+<meta property="og:image" content="https://invitezoom.vercel.app/og-image.png"/>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="InviteZoom – Free Online Invitation Maker"/>
+<meta name="twitter:description" content="Free 3D wedding, birthday & housewarming invitation maker. 30 templates, photo upload, WhatsApp share."/>
+<meta name="twitter:image" content="https://invitezoom.vercel.app/og-image.png"/>
+
+<!-- Google Search Console Verification -->
+<meta name="google-site-verification" content="c82eff4a6050af1a"/>
+
+<!-- Structured Data (Schema.org) -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"InviteZoom",
+  "url":"https://invitezoom.vercel.app/",
+  "description":"Free online invitation maker for weddings, birthdays and housewarming ceremonies. 30 premium templates with photo upload and WhatsApp sharing.",
+  "applicationCategory":"UtilitiesApplication",
+  "operatingSystem":"All",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},
+  "author":{"@type":"Organization","name":"DJ Groups"},
+  "keywords":"free invitation maker, wedding invitation, birthday card, housewarming invitation, online templates"
+}
+</script>
+
+<title>InviteZoom – Free Online Invitation Maker | Wedding, Birthday & Housewarming Cards</title>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1253244881049676" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&family=Playfair+Display:ital,wght@0,700;1,400&family=Cinzel:wght@600&display=swap" rel="stylesheet"/>
@@ -243,6 +287,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);overf
 </section>
 <div class="rb"></div>
 
+<!-- AdSense Ad 1 – Below Hero (Responsive Banner) -->
+<div style="text-align:center;padding:10px 12px;background:#fff;border-bottom:1px solid #FFD0B0">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1253244881049676"
+       data-ad-slot="auto"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({})</script>
+</div>
+
 <nav class="catbar">
   <button class="cb2 on" data-c="birthday" onclick="swCat('birthday',this)">🎈 Birthday</button>
   <button class="cb2" data-c="wedding" onclick="swCat('wedding',this)">💍 Wedding</button>
@@ -320,6 +375,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);overf
   </div>
 </section>
 <div class="rb" style="margin-top:20px"></div>
+
+<!-- AdSense Ad 2 – Above Footer (Responsive Banner) -->
+<div style="text-align:center;padding:10px 12px;background:#fff;border-top:1px solid #FFD0B0;border-bottom:1px solid #FFD0B0">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-1253244881049676"
+       data-ad-slot="auto"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle=window.adsbygoogle||[]).push({})</script>
+</div>
 
 <!-- FOOTER -->
 <footer class="foot">
@@ -543,11 +609,13 @@ async function gen(){
   const lt=document.getElementById('ldtxt');
   lt.textContent='வடிவமைக்கிறோம்... / Crafting...';
   await sleep(750);
-  buildCard();S.done=true;
+  buildCard();
+  S.done=true;
   lt.textContent='✅ Your 3D invitation is ready!';
   document.getElementById('abtnRow').style.display='grid';
-  if(currentMode==='video')startVidPreview();
   toast('🎉 Invitation ready!');
+  // If video mode already active, start preview after card is built
+  if(currentMode==='video') setTimeout(()=>startVidPreview(),300);
 }
 
 // ═══════════════ BUILD CARD ═══════════════
@@ -665,42 +733,126 @@ function startVidPreview(){
   stopVidPreview();
   const vpc=document.getElementById('vidPreviewCanvas');
   const vx=vpc.getContext('2d');
-  vpc.width=260;vpc.height=346;
+  vpc.width=280; vpc.height=374;
   const t=TM[S.cat][S.tidx];
-  const vp2=Array.from({length:45},()=>({x:Math.random()*260,y:Math.random()*346,w:4+Math.random()*5,h:3+Math.random()*5,col:PC[0|Math.random()*PC.length],sh:PS[0|Math.random()*PS.length],vx:(Math.random()-.5)*1.8,vy:1.2+Math.random()*1.8,rot:Math.random()*360,rv:(Math.random()-.5)*4,op:1,lf:Math.random()*180}));
+  // Build particle pool
+  const vp2=Array.from({length:50},()=>mkVP());
+  function mkVP(){return{x:Math.random()*280,y:Math.random()*374,w:4+Math.random()*5,h:3+Math.random()*5,col:PC[0|Math.random()*PC.length],sh:PS[0|Math.random()*PS.length],vx:(Math.random()-.5)*1.6,vy:1+Math.random()*1.8,rot:Math.random()*360,rv:(Math.random()-.5)*4,op:1,lf:Math.random()*180}}
   let fr=0;
-  async function frame(){
+
+  function frame(){
     if(currentMode!=='video')return;
-    vx.clearRect(0,0,260,346);
-    const g=vx.createLinearGradient(0,0,260,346);
-    const gc=t.grd.split(',');g.addColorStop(0,gc[0].trim());g.addColorStop(1,(gc[1]||gc[0]).trim());
-    vx.fillStyle=g;vx.fillRect(0,0,260,346);
-    try{
-      const snap=await html2canvas(document.getElementById('icb'),{scale:.85,useCORS:true,backgroundColor:null,logging:false,allowTaint:true});
-      const cw=228,ch=304,cx2=16,cy2=21+Math.sin(fr*.04)*5;
-      const sk=Math.sin(fr*.025)*.012;
-      vx.save();vx.shadowColor='rgba(0,0,0,.5)';vx.shadowBlur=18;
-      vx.translate(130,173+Math.sin(fr*.04)*5);vx.transform(1,0,sk,1,0,0);
-      vx.drawImage(snap,-114,-152,228,304);vx.restore();
-    }catch(_){}
+    vx.clearRect(0,0,280,374);
+
+    // 1. Theme gradient background
+    const g=vx.createLinearGradient(0,0,280,374);
+    const gc=t.grd.split(',');
+    g.addColorStop(0,(gc[0]||'#1a0a00').trim());
+    g.addColorStop(1,(gc[1]||gc[0]||'#3d0030').trim());
+    vx.fillStyle=g; vx.fillRect(0,0,280,374);
+
+    // 2. Rounded card background
+    const cX=14,cY=14,cW=252,cH=346,rad=16;
+    vx.save();
+    vx.beginPath();
+    vx.moveTo(cX+rad,cY);vx.lineTo(cX+cW-rad,cY);vx.quadraticCurveTo(cX+cW,cY,cX+cW,cY+rad);
+    vx.lineTo(cX+cW,cY+cH-rad);vx.quadraticCurveTo(cX+cW,cY+cH,cX+cW-rad,cY+cH);
+    vx.lineTo(cX+rad,cY+cH);vx.quadraticCurveTo(cX,cY+cH,cX,cY+cH-rad);
+    vx.lineTo(cX,cY+rad);vx.quadraticCurveTo(cX,cY,cX+rad,cY);
+    vx.closePath();
+    vx.clip();
+    // Fill card with theme bg (parse simple gradient or solid)
+    const bg=t.bg;
+    const m=bg.match(/#[0-9a-fA-F]{3,6}/g);
+    if(m&&m.length>=2){
+      const cg=vx.createLinearGradient(cX,cY,cX+cW,cY+cH);
+      cg.addColorStop(0,m[0]);cg.addColorStop(1,m[m.length-1]);
+      vx.fillStyle=cg;
+    } else {
+      vx.fillStyle=m?m[0]:'#fff';
+    }
+    // Float offset
+    const yOff=Math.sin(fr*.04)*5;
+    vx.fillRect(cX,cY+yOff,cW,cH);
+
+    // 3. Card content text
+    const cx=cX+cW/2;
+    vx.textAlign='center';
+    // Icon
+    vx.font='32px serif';
+    vx.fillText(t.ico, cx, cY+60+yOff);
+    // Title / Name
+    const name = S.cat==='birthday'?(gv('f_nm')||'Your Name'):
+                  S.cat==='wedding'?((gv('f_gr')||'Groom')+' & '+(gv('f_br')||'Bride')):
+                  (gv('f_hn')||gv('f_hs2')||'Host Family');
+    vx.font='bold 18px Fredoka One,Nunito,sans-serif';
+    vx.fillStyle=t.tc;
+    vx.shadowColor='rgba(0,0,0,.2)';vx.shadowBlur=4;
+    // wrap long name
+    const words=name.split(' ');let line='',lineY=cY+96+yOff;
+    words.forEach(w=>{
+      const test=line+w+' ';
+      if(vx.measureText(test).width>cW-20&&line!==''){vx.fillText(line.trim(),cx,lineY);line=w+' ';lineY+=22;}
+      else line=test;
+    });
+    vx.fillText(line.trim(),cx,lineY);vx.shadowBlur=0;
+    // Subtitle
+    const sub=S.cat==='birthday'?'Birthday Celebration 🎉':
+               S.cat==='wedding'?'Wedding Invitation 💍':'House Warming 🏡';
+    vx.font='12px Nunito,sans-serif';
+    vx.fillStyle=t.sc;
+    vx.fillText(sub,cx,lineY+22);
+    // Divider
+    vx.strokeStyle=t.sc;vx.globalAlpha=.3;vx.lineWidth=1;
+    vx.beginPath();vx.moveTo(cX+20,lineY+34+yOff);vx.lineTo(cX+cW-20,lineY+34+yOff);vx.stroke();
+    vx.globalAlpha=1;
+    // Details
+    vx.font='11px Nunito,sans-serif';vx.fillStyle=t.tc;
+    let dy=lineY+52+yOff;
+    const dt=fd(gv('f_dt')),tm=ft(gv('f_tm')),vn=gv('f_vn');
+    if(dt){vx.fillText('📅 '+dt+(tm?' · '+tm:''),cx,dy);dy+=18}
+    if(vn){
+      // truncate
+      const vnTxt='📍 '+(vn.length>28?vn.slice(0,25)+'…':vn);
+      vx.fillText(vnTxt,cx,dy);dy+=18;
+    }
+    // Emojis row
+    vx.font='16px serif';
+    vx.fillText(t.bal.join('  '),cx,cY+cH-22+yOff);
+    // Branding
+    vx.font='9px Nunito,sans-serif';vx.fillStyle=t.sc;vx.globalAlpha=.5;
+    vx.fillText('InviteZoom · Free',cx,cY+cH-8+yOff);vx.globalAlpha=1;
+    vx.restore();
+
+    // 4. Floating emoji decorations outside card
+    vx.font='16px serif';vx.textAlign='left';
+    t.bal.forEach((b,i)=>{
+      const ex=10+i*90;
+      const ey=8+Math.sin(fr*.04+i*1.5)*7;
+      vx.globalAlpha=.65;vx.fillText(b,ex,ey);
+    });
+    vx.globalAlpha=1;
+
+    // 5. Particles on top
     vp2.forEach((p,i)=>{
       p.x+=p.vx+Math.sin(p.lf*.03)*.3;p.y+=p.vy;p.rot+=p.rv;p.lf++;
       if(p.lf>180)p.op=Math.max(0,1-(p.lf-180)/30);
-      if(p.y>360||p.op<=0)vp2[i]={x:Math.random()*260,y:-12,w:4+Math.random()*5,h:3+Math.random()*5,col:PC[0|Math.random()*PC.length],sh:PS[0|Math.random()*PS.length],vx:(Math.random()-.5)*1.8,vy:1.2+Math.random()*1.8,rot:Math.random()*360,rv:(Math.random()-.5)*4,op:1,lf:0};
-      vx.save();vx.translate(p.x,p.y);vx.rotate(p.rot*Math.PI/180);vx.globalAlpha=p.op;vx.fillStyle=p.col;
+      if(p.y>380||p.op<=0)vp2[i]=mkVP();
+      vx.save();vx.translate(p.x,p.y);vx.rotate(p.rot*Math.PI/180);
+      vx.globalAlpha=p.op*.8;vx.fillStyle=p.col;
       if(p.sh==='r')vx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
       else if(p.sh==='c'){vx.beginPath();vx.arc(0,0,p.w/2,0,Math.PI*2);vx.fill()}
       else{vx.beginPath();vx.moveTo(0,-p.h/2);vx.lineTo(p.w/2,p.h/2);vx.lineTo(-p.w/2,p.h/2);vx.closePath();vx.fill()}
       vx.restore();
     });
-    t.bal.forEach((b,i)=>{
-      vx.globalAlpha=.7;vx.font='18px serif';vx.textAlign='left';
-      vx.fillText(b,30+i*80,30+Math.sin(fr*.04+i*1.5)*9);vx.globalAlpha=1;
-    });
-    const vg=vx.createRadialGradient(130,173,60,130,173,200);
-    vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.22)');
-    vx.fillStyle=vg;vx.fillRect(0,0,260,346);
-    fr++;vidPreviewAnim=requestAnimationFrame(frame);
+
+    // 6. Vignette
+    const vg=vx.createRadialGradient(140,187,80,140,187,200);
+    vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.2)');
+    vx.fillStyle=vg;vx.fillRect(0,0,280,374);
+
+    fr++;
+    vidPreviewAnim=requestAnimationFrame(frame);
   }
   frame();
 }
@@ -714,7 +866,8 @@ async function dlVideo(){
   btn.disabled=true;txt.textContent='🔴 Recording 8s...';
   showLdr('🎬 Recording video invitation...');
   try{
-    if(currentMode!=='video'){setMode('video');await sleep(700)}
+    if(currentMode!=='video'){setMode('video');await sleep(800)}
+    else{ stopVidPreview(); await sleep(100); startVidPreview(); await sleep(500); }
     const vpc=document.getElementById('vidPreviewCanvas');
     const aCtx=new(window.AudioContext||window.webkitAudioContext)();
     const dest=aCtx.createMediaStreamDestination();
@@ -795,19 +948,45 @@ function attachGalTilt(){
 // ═══════════════ DOWNLOAD IMAGE ═══════════════
 async function dlCard(){
   if(!S.done){toast('⚠️ Generate invitation first!');return}
-  const cb=document.getElementById('icb');
+  // Switch to image mode so card DOM is visible for capture
+  if(currentMode==='video'){
+    setMode('image');
+    await sleep(200);
+  }
   showLdr('📸 Preparing image...');
   try{
     const w3=document.getElementById('w3d');
-    const orig=w3.style.transform;w3.style.transform='none';w3.style.animation='none';
-    const cv=await html2canvas(cb,{scale:2.5,useCORS:true,backgroundColor:null,logging:false,allowTaint:true});
-    w3.style.transform=orig;w3.style.animation='';
+    const cb=document.getElementById('icb');
+    // Freeze animation temporarily
+    const origAnim=w3.style.animation;
+    const origTrans=w3.style.transform;
+    w3.style.animation='none';
+    w3.style.transform='none';
+    await sleep(100); // let browser repaint
+    const cv=await html2canvas(cb,{
+      scale:2.5,
+      useCORS:true,
+      allowTaint:true,
+      backgroundColor:null,
+      logging:false,
+      ignoreElements:(el)=>el.id==='cc' // skip confetti canvas
+    });
+    w3.style.animation=origAnim;
+    w3.style.transform=origTrans;
     hideLdr();
+    if(!cv||cv.width===0){toast('⚠️ Capture failed. Try again.');return}
     const lk=document.createElement('a');
     lk.download=`InviteZoom_${S.cat}_${Date.now()}.png`;
-    lk.href=cv.toDataURL('image/png');lk.click();
-    setTimeout(()=>openM('sucMod'),500);
-  }catch(e){hideLdr();toast('⚠️ Download failed. Try again.')}
+    lk.href=cv.toDataURL('image/png');
+    document.body.appendChild(lk);
+    lk.click();
+    document.body.removeChild(lk);
+    setTimeout(()=>openM('sucMod'),600);
+  }catch(e){
+    hideLdr();
+    console.error('Download error:',e);
+    toast('⚠️ Download failed. Try again.');
+  }
 }
 
 // ═══════════════ SHARE BUTTONS ═══════════════
